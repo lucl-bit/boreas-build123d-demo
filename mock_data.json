@@ -1,0 +1,97 @@
+{
+  "_hinweis": "Alle Werte sind Mock-/Beispieldaten zum Ausprobieren, keine echten Material-, Motor- oder Aerodaten.",
+  "limits": {
+    "min_margin": 5.0,
+    "prop_gap": 10.0,
+    "min_wall": 1.2,
+    "max_deflection": 1.5,
+    "min_twr": 2.0,
+    "min_safety_factor": 2.0
+  },
+  "materials": {
+    "PLA":     {"label": "PLA (FDM)",              "density": 1.24, "E": 3500,  "yield": 50,  "price_kg": 22,  "process": "FDM"},
+    "PETG":    {"label": "PETG (FDM)",             "density": 1.27, "E": 2100,  "yield": 45,  "price_kg": 25,  "process": "FDM"},
+    "PA12-CF": {"label": "PA12-CF (Carbon-Nylon)", "density": 1.15, "E": 7000,  "yield": 85,  "price_kg": 70,  "process": "FDM"},
+    "ALU":     {"label": "Aluminium 6061",         "density": 2.70, "E": 69000, "yield": 240, "price_kg": 8,   "process": "CNC"},
+    "CFK":     {"label": "CFK-Laminat",            "density": 1.55, "E": 60000, "yield": 500, "price_kg": 120, "process": "Laminat"}
+  },
+  "printers": {
+    "Prusa MK4":       [250, 210, 220],
+    "Bambu Lab X1C":   [256, 256, 256],
+    "Formlabs Form 3": [145, 145, 185]
+  },
+  "manufacturing": {
+    "flow_cm3_per_h": 12.0,
+    "machine_rate_per_h": 1.5,
+    "overhang_angle_deg": 45
+  },
+  "aero": {
+    "rho": 1.225,
+    "cd_front": 1.05,
+    "cd_top": 1.2,
+    "max_tilt_deg": 45
+  },
+  "flight": {
+    "motor_time_constant_s": 0.035,
+    "step_deg": 25,
+    "omega_n": 14.0,
+    "zeta": 0.75,
+    "ref_Ixx_kgm2": 0.00275,
+    "battery_position_z_mm": -55,
+    "battery_radius_mm": 24,
+    "battery_length_mm": 60
+  },
+  "requirement_fields": {
+    "arm_count":        ["Anzahl Motoren/Ausleger", ""],
+    "payload_diameter": ["Nutzlast Ø", "mm"],
+    "payload_length":   ["Nutzlast Länge", "mm"],
+    "payload_mass":     ["Nutzlast Masse", "g"],
+    "battery_mass":     ["Akku Masse", "g"],
+    "prop_diameter":    ["Propeller Ø", "mm"],
+    "motor_diameter":   ["Motor Ø", "mm"],
+    "motor_mass":       ["Motor Masse (je)", "g"],
+    "thrust_per_motor": ["Max. Schub je Motor", "N"]
+  },
+  "presets": {
+    "Boreas Referenz (≈ STEP)": {
+      "material": "PETG",
+      "req": {"arm_count": 4, "payload_diameter": 58, "payload_length": 105, "payload_mass": 120, "battery_mass": 180,
+              "prop_diameter": 127, "motor_diameter": 20, "motor_mass": 28, "thrust_per_motor": 6.5}
+    },
+    "Kamera-Gimbal": {
+      "material": "PA12-CF",
+      "req": {"arm_count": 4, "payload_diameter": 72, "payload_length": 90, "payload_mass": 260, "battery_mass": 250,
+              "prop_diameter": 152, "motor_diameter": 24, "motor_mass": 36, "thrust_per_motor": 9}
+    },
+    "Heavy-Lift Hexa": {
+      "material": "PA12-CF",
+      "req": {"arm_count": 6, "payload_diameter": 90, "payload_length": 150, "payload_mass": 600, "battery_mass": 520,
+              "prop_diameter": 178, "motor_diameter": 28, "motor_mass": 55, "thrust_per_motor": 14}
+    },
+    "Indoor Kompakt": {
+      "material": "PLA",
+      "req": {"arm_count": 4, "payload_diameter": 40, "payload_length": 70, "payload_mass": 40, "battery_mass": 60,
+              "prop_diameter": 76, "motor_diameter": 12, "motor_mass": 10, "thrust_per_motor": 2.2}
+    },
+    "Tricopter Sensor": {
+      "material": "PETG",
+      "req": {"arm_count": 3, "payload_diameter": 60, "payload_length": 120, "payload_mass": 150, "battery_mass": 200,
+              "prop_diameter": 140, "motor_diameter": 22, "motor_mass": 32, "thrust_per_motor": 8}
+    }
+  },
+  "original_measured": {
+    "_quelle": "aus 'Mohammed_0.1 Full Shell.step' vermessen (Flächenmodell, gerundet)",
+    "body_radius": 33.0,
+    "body_height": 117.0,
+    "slot_count": 2,
+    "slot_width": 12.0,
+    "arm_count": 4,
+    "arm_angle": 45.0,
+    "arm_reach": 110.0,
+    "arm_width": 13.0,
+    "arm_thickness": 3.0,
+    "pod_radius": 12.0,
+    "pod_height": 28.0,
+    "nose_length": 92.7
+  }
+}

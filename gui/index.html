@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boreas build123d Demo</title>
+<link rel="stylesheet" href="/gui/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <h1>Boreas <span>·</span> build123d Demo</h1>
+    <nav class="modes">
+      <button data-mode="tour" class="active">① Feature-Tour</button>
+      <button data-mode="werkbank">② Werkbank</button>
+      <button data-mode="pipeline">③ Pipeline</button>
+    </nav>
+    <span class="spacer"></span>
+    <label class="hsel">Datensatz <select id="preset"></select></label>
+    <label class="hsel">Material <select id="material"></select></label>
+    <span class="chip" id="chipChecks">–</span>
+    <span class="chip" id="chipTime">–</span>
+  </header>
+
+  <!-- ================= LINKS ================= -->
+  <aside class="left">
+    <section class="mode-pane" data-pane="tour">
+      <div class="tour-head">
+        <div class="muted small">Geführte Tour durch build123d – am Boreas-Oberteil</div>
+        <div class="progress"><i id="tourProgress"></i></div>
+      </div>
+      <div id="tourList"></div>
+      <div class="tour-nav">
+        <button class="btn" id="tourPrev">← Zurück</button>
+        <button class="btn primary" id="tourNext">Weiter →</button>
+      </div>
+    </section>
+
+    <section class="mode-pane" data-pane="werkbank">
+      <div class="tabs">
+        <button data-tab="req" class="active">Anforderungen</button>
+        <button data-tab="par">Parameter</button>
+        <button data-tab="var">Varianten</button>
+        <button data-tab="code">Code</button>
+      </div>
+      <div class="pane active" id="pane-req">
+        <p class="note">Mock-Anforderungen → build123d leitet daraus ein gültiges Modell ab. Datensatz &amp; Material oben wählen.</p>
+        <div id="reqFields"></div>
+        <button class="btn primary block" id="btnAuto">⚙ Auto-Auslegung aus Anforderungen</button>
+      </div>
+      <div class="pane" id="pane-par">
+        <div class="grid2" style="margin-bottom:6px">
+          <button class="btn" id="btnReset">↺ Original-Maße</button>
+          <button class="btn" id="btnAuto2">⚙ Auto-Auslegung</button>
+        </div>
+        <div id="paramFields"></div>
+        <h3>Abgeleitete Maße (getrieben)</h3>
+        <div class="kv boxed" id="derived"></div>
+      </div>
+      <div class="pane" id="pane-var">
+        <p class="note">Alle Mock-Datensätze auslegen, bauen und vergleichen.</p>
+        <button class="btn primary block" id="btnBatch">▶ Alle Varianten berechnen</button>
+        <div id="batch" style="margin-top:12px"></div>
+      </div>
+      <div class="pane" id="pane-code">
+        <p class="note">Der komplette Modellcode (<code>boreas_upper.py</code>).</p>
+        <pre class="code" id="srcCode">lädt…</pre>
+      </div>
+    </section>
+
+    <section class="mode-pane" data-pane="pipeline">
+      <div class="pipe-head">
+        <p class="note">Die Kette läuft genauso headless (<code>python pipeline.py --all</code>) – z. B. in CI bei jeder Anforderungsänderung.</p>
+        <label class="check-row"><input type="checkbox" id="pipeOpt" checked> Optimierungs-Schleife aktiv</label>
+        <button class="btn primary block" id="btnPipe">▶ Pipeline starten</button>
+        <div class="legend-inline"><span class="badge b3d">build123d</span> liefert Geometrie &amp; Daten <span class="badge other">Tool</span> nachgelagerte Rechnung</div>
+      </div>
+      <div class="pipe-flow" id="pipeFlow"><svg id="pipeSvg"></svg></div>
+    </section>
+  </aside>
+
+  <!-- ================= MITTE ================= -->
+  <main class="viewer">
+    <canvas id="canvas"></canvas>
+    <div class="toolbar" id="toolbar">
+      <span class="tog on" data-t="edges">Kanten</span>
+      <span class="tog wb" data-t="orig">Original-Overlay</span>
+      <span class="tog wb" data-t="lower">Unterteil (STEP)</span>
+      <span class="tog wb on" data-t="props">Propeller</span>
+      <span class="tog wb" data-t="payload">Nutzlast</span>
+      <span class="tog wb" data-t="section">Schnitt</span>
+      <span class="slider-box" id="explodeBox">Explosion <input type="range" id="explode" min="0" max="150" value="40"></span>
+    </div>
+    <div class="views">
+      <button class="btn" data-view="iso">Iso</button>
+      <button class="btn" data-view="front">Vorne</button>
+      <button class="btn" data-view="top">Oben</button>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="busy" id="busy">build123d rechnet…</div>
+    <div class="stepbadge" id="stepBadge"></div>
+  </main>
+
+  <!-- ================= RECHTS ================= -->
+  <aside class="right">
+    <section class="mode-pane" data-pane="tour"><div id="tourPanel" class="panel"></div></section>
+
+    <section class="mode-pane" data-pane="werkbank">
+      <div class="panel">
+        <h3>Masse &amp; Eigenschaften</h3>
+        <div class="bigrow">
+          <div><div class="big" id="mass">–</div><div class="muted">Strukturmasse</div></div>
+          <div><div class="big" id="twr">–</div><div class="muted">Schub/Gewicht</div></div>
+        </div>
+        <table style="margin-top:10px" id="partsTable"></table>
+        <div class="kv" style="margin-top:10px" id="propsKv"></div>
+        <h3>Constraints <span id="checkSum" class="muted"></span></h3>
+        <div id="checks"></div>
+        <h3>Export</h3>
+        <div class="grid3">
+          <button class="btn" data-exp="step">STEP</button><button class="btn" data-exp="stl">STL</button>
+          <button class="btn" data-exp="3mf">3MF</button><button class="btn" data-exp="glb">GLB</button>
+          <button class="btn" data-exp="dxf">DXF</button><button class="btn" data-exp="svg">SVG</button>
+        </div>
+        <button class="btn block" data-drawing="1" style="margin-top:6px">📐 Bemaßte Zeichnung ansehen</button>
+        <h3>Vergleich mit Original-STEP</h3>
+        <table id="compare"></table>
+      </div>
+    </section>
+
+    <section class="mode-pane" data-pane="pipeline"><div id="pipePanel" class="panel">
+      <h2>Wie build123d in die Simulationskette passt</h2>
+      <p class="lead">build123d ist das geometrische Rückgrat: Aus Anforderungen entsteht ein exaktes BRep-Modell. Daraus werden
+        Masse, Trägheit, Querschnitte, Projektionen und Netze abgeleitet, die jede nachgelagerte Simulation braucht.
+        Die Optimierung baut das CAD in der Schleife neu – ohne manuelle CAD-Arbeit.</p>
+      <p class="muted">Links „Pipeline starten“ drücken, danach eine Stufe anklicken.</p>
+    </div></section>
+  </aside>
+</div>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <div class="head"><strong>Werkstattzeichnung (2 × A3, parametrisch bemaßt)</strong><span class="spacer"></span>
+      <a class="btn" id="dlDrawing" download="boreas_oberteil.svg">SVG herunterladen</a>
+      <button class="btn" id="closeModal">Schließen</button></div>
+    <div class="body"><img id="drawingImg" alt="Technische Zeichnung"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script type="module" src="/gui/app.js"></script>
+</body>
+</html>
