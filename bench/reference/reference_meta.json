@@ -1,0 +1,516 @@
+{
+ "source": "Mohammed_0.1 Full Shell.step",
+ "tessellation": {
+  "linear_tol_mm": 0.05,
+  "angular_tol_rad": 0.1
+ },
+ "shells": {
+  "lower": {
+   "step_shells": [
+    0
+   ],
+   "faces_total": 179,
+   "faces_failed": 1,
+   "area_failed_mm2": 0.0034239031168650236,
+   "occ_area_mm2": 56222.05801957001,
+   "coverage_area_fraction": 0.9999999391003596,
+   "coverage_face_fraction": 0.994413407821229,
+   "occ_volume_mm3": 95426.1921859851,
+   "occ_solid_valid": true
+  },
+  "nose_cap": {
+   "step_shells": [
+    1
+   ],
+   "faces_total": 21,
+   "faces_failed": 0,
+   "area_failed_mm2": 0.0,
+   "occ_area_mm2": 15226.216058204576,
+   "coverage_area_fraction": 1.0,
+   "coverage_face_fraction": 1.0
+  },
+  "nose_insert": {
+   "step_shells": [
+    2
+   ],
+   "faces_total": 3,
+   "faces_failed": 0,
+   "area_failed_mm2": 0.0,
+   "occ_area_mm2": 5010.298977163502,
+   "coverage_area_fraction": 1.0,
+   "coverage_face_fraction": 1.0
+  },
+  "upper": {
+   "step_shells": [
+    3
+   ],
+   "faces_total": 244,
+   "faces_failed": 0,
+   "area_failed_mm2": 0.0,
+   "occ_area_mm2": 63672.03491607665,
+   "coverage_area_fraction": 1.0,
+   "coverage_face_fraction": 1.0,
+   "occ_volume_mm3": 405549.37192649883,
+   "occ_solid_valid": false
+  },
+  "nose": {
+   "step_shells": [
+    1,
+    2
+   ],
+   "note": "nose = nose_cap + nose_insert (Schalen offen, Volumen aus Mesh unzuverlaessig)",
+   "occ_area_mm2": 20236.51503536808,
+   "coverage_area_fraction": 1.0
+  }
+ },
+ "note": "Tessellierung ganzer Schalen; Flaechen ohne Triangulierung werden uebersprungen und gezaehlt.",
+ "alignment": {
+  "axis_x": 679.7012598886583,
+  "axis_y": 23.162612173854086,
+  "split_z": 1302.904615896,
+  "n_fits": 20,
+  "axis_scatter_mm": [
+   0.1282584512660863,
+   0.12261178593572634
+  ],
+  "offset_to_model": [
+   -679.7012598886583,
+   -23.162612173854086,
+   -1302.904615896
+  ]
+ },
+ "parts": {
+  "lower": {
+   "triangles": 146713,
+   "bbox_mm": [
+    -61.87375958562302,
+    -72.28896383540736,
+    -131.42201423300003,
+    61.45325307364885,
+    73.94494263407653,
+    2.5638077667047128
+   ],
+   "bbox_size_mm": [
+    123.32701265927187,
+    146.23390646948388,
+    133.98582199970474
+   ],
+   "area_mm2": 56217.64264075046,
+   "topology": {
+    "triangles": 146713,
+    "vertices_welded": 73212,
+    "weld_tol_mm": 0.001,
+    "degenerate_triangles": 306,
+    "open_edges": 50,
+    "non_manifold_edges": 16,
+    "inconsistent_orientation_edges": 30,
+    "watertight": false,
+    "closed_and_oriented": false,
+    "components": 1,
+    "euler_characteristic": -2
+   },
+   "volume_mm3": 95304.34589615466,
+   "signed_volume_mm3": 95304.34589615466,
+   "centroid_mm": [
+    -0.044909388311982164,
+    0.25061871503199684,
+    -60.248188622911464
+   ],
+   "inertia_tensor_mm5": [
+    [
+     221442892.5433934,
+     24605.90128441566,
+     88722.74179939476
+    ],
+    [
+     24605.90128441566,
+     211420233.53726745,
+     23148.659659407916
+    ],
+    [
+     88722.74179939476,
+     23148.659659407916,
+     105819316.59494364
+    ]
+   ],
+   "principal_moments_mm5": [
+    105819243.44825095,
+    211420178.10875526,
+    221443021.11859834
+   ],
+   "volume_reliable": false,
+   "frontal_area_z_mm2": {
+    "axis": "z",
+    "area_mm2": 4796.085605448831,
+    "pixel_mm": 0.048744635489827964,
+    "raster_px": [
+     2534,
+     3003
+    ],
+    "covered_px": 2018521
+   },
+   "frontal_area_x_mm2": {
+    "axis": "x",
+    "area_mm2": 8807.87384011966,
+    "pixel_mm": 0.048744635489827964,
+    "raster_px": [
+     3003,
+     2752
+    ],
+    "covered_px": 3706956
+   }
+  },
+  "nose_cap": {
+   "triangles": 11876,
+   "bbox_mm": [
+    -32.561197020938266,
+    -32.56566552925238,
+    199.10985039000002,
+    32.54882826564369,
+    32.541627604352314,
+    299.8151190880001
+   ],
+   "bbox_size_mm": [
+    65.11002528658196,
+    65.10729313360468,
+    100.70526869800005
+   ],
+   "area_mm2": 15213.4817919634,
+   "topology": {
+    "triangles": 11876,
+    "vertices_welded": 6033,
+    "weld_tol_mm": 0.001,
+    "degenerate_triangles": 1,
+    "open_edges": 189,
+    "non_manifold_edges": 0,
+    "inconsistent_orientation_edges": 0,
+    "watertight": false,
+    "closed_and_oriented": false,
+    "components": 1,
+    "euler_characteristic": 1
+   },
+   "volume_mm3": 127649.75673601739,
+   "signed_volume_mm3": 127649.75673601739,
+   "centroid_mm": [
+    0.008389431627030652,
+    -0.04525909952959645,
+    244.43888685087862
+   ],
+   "inertia_tensor_mm5": [
+    [
+     84876034.17946857,
+     161096.87478594194,
+     -336991.9359743863
+    ],
+    [
+     161096.87478594194,
+     85650564.90052834,
+     -73874.87269944407
+    ],
+    [
+     -336991.9359743863,
+     -73874.87269944407,
+     53787494.969283655
+    ]
+   ],
+   "principal_moments_mm5": [
+    53783679.24616185,
+    84847076.02367032,
+    85683338.77944836
+   ],
+   "volume_reliable": false,
+   "frontal_area_z_mm2": {
+    "axis": "z",
+    "area_mm2": 3330.405701563832,
+    "pixel_mm": 0.021703341762193986,
+    "raster_px": [
+     3003,
+     3003
+    ],
+    "covered_px": 7070399
+   },
+   "frontal_area_x_mm2": {
+    "axis": "x",
+    "area_mm2": 4391.457290486601,
+    "pixel_mm": 0.03356842289933335,
+    "raster_px": [
+     1943,
+     3003
+    ],
+    "covered_px": 3897147
+   }
+  },
+  "nose_insert": {
+   "triangles": 4839,
+   "bbox_mm": [
+    -18.611457117658347,
+    -18.618022154854085,
+    243.34815797024135,
+    18.599088364341696,
+    18.59218591860936,
+    293.3031392160001
+   ],
+   "bbox_size_mm": [
+    37.21054548200004,
+    37.21020807346345,
+    49.954981245758745
+   ],
+   "area_mm2": 5008.779270994408,
+   "topology": {
+    "triangles": 4839,
+    "vertices_welded": 2518,
+    "weld_tol_mm": 0.001,
+    "degenerate_triangles": 1,
+    "open_edges": 196,
+    "non_manifold_edges": 0,
+    "inconsistent_orientation_edges": 0,
+    "watertight": false,
+    "closed_and_oriented": false,
+    "components": 1,
+    "euler_characteristic": 1
+   },
+   "volume_mm3": 25128.49769211283,
+   "signed_volume_mm3": -25128.49769211283,
+   "centroid_mm": [
+    0.11611297810694304,
+    0.019429729044781463,
+    266.78230927503864
+   ],
+   "inertia_tensor_mm5": [
+    [
+     4976152.7267622985,
+     -107.34343154760131,
+     -45865.224374547935
+    ],
+    [
+     -107.34343154760131,
+     4977072.874482151,
+     7773.7497482397885
+    ],
+    [
+     -45865.224374547935,
+     7773.7497482397885,
+     4270879.246389452
+    ]
+   ],
+   "principal_moments_mm5": [
+    4267824.358553096,
+    4976983.923935756,
+    4979296.565145052
+   ],
+   "volume_reliable": false,
+   "frontal_area_z_mm2": {
+    "axis": "z",
+    "area_mm2": 1087.9142383978153,
+    "pixel_mm": 0.012403515160666682,
+    "raster_px": [
+     3003,
+     3003
+    ],
+    "covered_px": 7071395
+   },
+   "frontal_area_x_mm2": {
+    "axis": "x",
+    "area_mm2": 1484.4967885935068,
+    "pixel_mm": 0.016651660415252914,
+    "raster_px": [
+     2238,
+     3003
+    ],
+    "covered_px": 5353825
+   }
+  },
+  "upper": {
+   "triangles": 198226,
+   "bbox_mm": [
+    -84.79319063708124,
+    -98.65580226651801,
+    0.0,
+    84.86776599561745,
+    100.31167901086471,
+    117.095384105
+   ],
+   "bbox_size_mm": [
+    169.66095663269869,
+    198.96748127738272,
+    117.095384105
+   ],
+   "area_mm2": 63642.978085344526,
+   "topology": {
+    "triangles": 198226,
+    "vertices_welded": 99556,
+    "weld_tol_mm": 0.001,
+    "degenerate_triangles": 30,
+    "open_edges": 960,
+    "non_manifold_edges": 23,
+    "inconsistent_orientation_edges": 46,
+    "watertight": false,
+    "closed_and_oriented": false,
+    "components": 1,
+    "euler_characteristic": 5
+   },
+   "volume_mm3": 404942.3116315458,
+   "signed_volume_mm3": 404942.3116315458,
+   "centroid_mm": [
+    -0.010426838970323787,
+    0.3663182445230057,
+    46.39898557300724
+   ],
+   "inertia_tensor_mm5": [
+    [
+     1082591210.5121686,
+     -834084.2101106966,
+     -1100331.8546708452
+    ],
+    [
+     -834084.2101106966,
+     905384028.4950824,
+     2240439.9781371346
+    ],
+    [
+     -1100331.8546708452,
+     2240439.9781371346,
+     1198585799.3224447
+    ]
+   ],
+   "principal_moments_mm5": [
+    905363063.0832806,
+    1082584500.9159667,
+    1198613474.3304486
+   ],
+   "volume_reliable": false,
+   "frontal_area_z_mm2": {
+    "axis": "z",
+    "area_mm2": 6278.573722753545,
+    "pixel_mm": 0.06632249375912758,
+    "raster_px": [
+     2562,
+     3003
+    ],
+    "covered_px": 1427379
+   },
+   "frontal_area_x_mm2": {
+    "axis": "x",
+    "area_mm2": 11450.696396858571,
+    "pixel_mm": 0.06632249375912758,
+    "raster_px": [
+     3003,
+     1769
+    ],
+    "covered_px": 2603216
+   }
+  },
+  "nose": {
+   "triangles": 16715,
+   "bbox_mm": [
+    -32.561197020938266,
+    -32.56566552925238,
+    199.10985039000002,
+    32.54882826564369,
+    32.541627604352314,
+    299.8151190880001
+   ],
+   "bbox_size_mm": [
+    65.11002528658196,
+    65.10729313360468,
+    100.70526869800005
+   ],
+   "area_mm2": 20222.26106295781,
+   "topology": {
+    "triangles": 16715,
+    "vertices_welded": 8551,
+    "weld_tol_mm": 0.001,
+    "degenerate_triangles": 2,
+    "open_edges": 385,
+    "non_manifold_edges": 0,
+    "inconsistent_orientation_edges": 0,
+    "watertight": false,
+    "closed_and_oriented": false,
+    "components": 2,
+    "euler_characteristic": 2
+   },
+   "volume_mm3": 91932.13235182583,
+   "signed_volume_mm3": 91932.13235182583,
+   "centroid_mm": [
+    -0.025388193873177034,
+    -0.03536629201123931,
+    238.1675005020155
+   ],
+   "inertia_tensor_mm5": [
+    [
+     60447970.30845629,
+     160773.11204439195,
+     -189780.5323726663
+    ],
+    [
+     160773.11204439195,
+     61220827.75135517,
+     -28437.14377964777
+    ],
+    [
+     -189780.5323726663,
+     -28437.14377964777,
+     47786916.14703201
+    ]
+   ],
+   "principal_moments_mm5": [
+    47784021.69204004,
+    60418438.978396796,
+    61253253.536406614
+   ],
+   "volume_reliable": false,
+   "frontal_area_z_mm2": {
+    "axis": "z",
+    "area_mm2": 3330.405701563832,
+    "pixel_mm": 0.021703341762193986,
+    "raster_px": [
+     3003,
+     3003
+    ],
+    "covered_px": 7070399
+   },
+   "frontal_area_x_mm2": {
+    "axis": "x",
+    "area_mm2": 4391.457290486601,
+    "pixel_mm": 0.03356842289933335,
+    "raster_px": [
+     1943,
+     3003
+    ],
+    "covered_px": 3897147
+   }
+  }
+ },
+ "full_model_aligned": {
+  "bbox_mm": [
+   -84.79319063708124,
+   -98.65580226651801,
+   -131.42201423300003,
+   84.86776599561745,
+   100.31167901086471,
+   299.8151190880001
+  ],
+  "area_mm2": 140082.8817890528,
+  "frontal_area_z_mm2": {
+   "axis": "z",
+   "area_mm2": 8617.42742784173,
+   "pixel_mm": 0.06632249375912758,
+   "raster_px": [
+    2562,
+    3003
+   ],
+   "covered_px": 1959097
+  },
+  "frontal_area_x_mm2": {
+   "axis": "x",
+   "area_mm2": 24695.242619587887,
+   "pixel_mm": 0.14374571110700005,
+   "raster_px": [
+    1388,
+    3003
+   ],
+   "covered_px": 1195153
+  }
+ },
+ "build_seconds": 24.4
+}

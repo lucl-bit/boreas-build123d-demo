@@ -1,0 +1,899 @@
+{
+  "version": 1,
+  "generated": "2026-09-30",
+  "note": "Erwartungen unter 'expected' sind Hypothesen aus Recherche und Einzelmessungen vom 30.09.2026 (build123d 0.13.0 lokal gemessen, PicoGK 2.3.0 nur aus Quelltext gelesen) und werden durch den Benchmark bestätigt oder widerlegt. status folgt dem CLI-Vertrag: ok | partial | unsupported | failed. plan_goals verweist auf die Ziele 1 bis 5 in PLAN.md.",
+  "sections": {
+    "common": "Beide Tools lösen dieselbe Aufgabe, Ergebnisse nebeneinander",
+    "voxel_only": "Nur bzw. klar besser in Voxel",
+    "brep_only": "Nur bzw. klar besser in B-rep",
+    "api": "Nicht-geometrische Kriterien (Recherche plus Messung)"
+  },
+  "tasks": [
+    {
+      "id": "B01",
+      "section": "common",
+      "title": "Referenz importieren und mit eigenem Modell abgleichen",
+      "goal": "Zeigt, wie gut jedes Werkzeug vorhandene Fremdgeometrie (Shapr3D-STEP, Freiform) aufnimmt und wie genau das eigene parametrische Modell die Referenz trifft.",
+      "procedure": {
+        "common": "Referenz Mohammed_0.1 Full Shell.step lesen, je Körper (Unterteil, Oberteil, Nase, Einsatz) Volumen, Fläche, Bounding Box bestimmen; danach Abgleich mit dem Ergebnis von B02 (gleiche Koordinaten, mm).",
+        "brep": "import_step, Shells/Solids/Faces zählen und mit is_valid prüfen; Volumen, Fläche, Schwerpunkt je Körper; Abweichung zum eigenen Modell über Boolean (Differenzvolumen A-B plus B-A) und Bounding-Box-Vergleich.",
+        "voxel": "STEP ist nicht lesbar: Referenz ausserhalb von PicoGK zu binärem STL wandeln (z. B. build123d export_stl), dann Mesh.mshFromStlFile und new Voxels(mesh); Volumen und Bounding Box je Körper; Abweichung zum eigenen Voxelmodell über a-b und b-a mit CalculateProperties."
+      },
+      "metrics": [
+        "import_zeit_s",
+        "anzahl_koerper_gueltig",
+        "volume_mm3 je Körper",
+        "area_mm2 je Körper (Voxel: aus Mesh)",
+        "bbox_mm",
+        "abweichung_volumen_mm3 und Prozent zur Referenz",
+        "peak_mem_mb"
+      ],
+      "success_criteria": [
+        "Alle 4 Körper der Referenz werden erkannt und mit Volumen und Bounding Box ausgewiesen.",
+        "Bounding-Box-Abweichung des Modells zur Referenz kleiner 0.5 mm (B-rep) bzw. kleiner 2 Voxel (Voxel).",
+        "Ungültige oder offene Hüllen werden nicht verschwiegen, sondern im result.json notiert."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "STEP-Import ist nativ. Lokal gemessen: 5.3 s für 5.6 MB, 447 Flächen. Nur das Unterteil (95'426 mm³) ergibt einen gültigen Solid; die 3 anderen Hüllen ergeben mit Solid(shell) is_valid=False (auch mit ShapeFix_Solid). Reparatur oder Sewing nötig; weicht von PLAN.md (4 geschlossene Körper) ab."
+        },
+        "voxel": {
+          "status": "partial",
+          "reasoning": "Kein STEP-Import im Kernel (nur binäres STL, VDB, CLI, TGA). Umweg über STL möglich. voxMeshShell und das Rendern offener Hüllen tolerieren nicht geschlossene Netze besser als B-rep, aber Volumenangaben sind nur auf Voxelgrösse genau."
+        }
+      },
+      "plan_goals": [1, 2],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://github.com/gumyr/build123d",
+        "https://github.com/leap71/PicoGK"
+      ]
+    },
+    {
+      "id": "B02",
+      "section": "common",
+      "title": "Parametrisches Gesamtmodell (Oberteil, Unterteil, Nase) aus der Spec",
+      "goal": "Zeigt, wie viel Code und Zeit ein komplettes parametrisches Modell aus spec/boreas_spec.json braucht und ob es geometrisch gültig herauskommt.",
+      "procedure": {
+        "common": "Alle Gruppen der Spec lesen, Teile Oberteil, Unterteil, Nase (mit Einsatz) erzeugen, Baugruppe in gemeinsamem Koordinatensystem (Z nach oben, Ursprung in der Trennebene), Ausgabe je Teil als STL plus Gesamt-STL, Metriken je Teil.",
+        "brep": "python -m brep.cli --task B02; Builder- oder Algebra-Modus, Ausgabe zusätzlich STEP; Validität mit is_valid je Teil.",
+        "voxel": "dotnet run --project voxel -c Release -- --task B02 --voxel 0.25; ShapeKernel oder eigener Code; Ausgabe STL je Teil; Wasserdichtheit über Mesh-Prüfung."
+      },
+      "metrics": [
+        "runtime_s",
+        "peak_mem_mb",
+        "code_loc",
+        "volume_mm3 gesamt und je Teil",
+        "area_mm2",
+        "bbox_mm",
+        "is_valid bzw. wasserdicht je Teil",
+        "Abweichung zur Referenz aus B01"
+      ],
+      "success_criteria": [
+        "3 Teile, alle gültig (B-rep) bzw. wasserdicht (Voxel).",
+        "Gesamtlänge (Z) innerhalb 1 mm der Referenz.",
+        "Alle Parameter kommen ausschliesslich aus der Spec (kein Hardcoding)."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Loft, Sweep und Boolean sind Kernaufgaben von build123d. Der Demo-Code (boreas_upper.py) baut bereits Oberteil und Nase. Laufzeit voraussichtlich Sekunden bis wenige Minuten. Risiko: Booleans auf tangentialen Flächen und Verrundungen."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Booleans, Offsets und Konturen sind nativ (BaseRevolve, BasePipe, Lens im ShapeKernel), Booleans scheitern praktisch nie. Mehraufwand für Tropfenprofile (kein NACA-Objekt) und Loft-artige Formen; Ergebnis nur auf Voxelgrösse genau. Code voraussichtlich länger."
+        }
+      },
+      "plan_goals": [1, 4, 5],
+      "depends_on": [],
+      "evidence": [
+        "https://build123d.readthedocs.io/en/latest/",
+        "https://github.com/leap71/LEAP71_ShapeKernel"
+      ]
+    },
+    {
+      "id": "B03",
+      "section": "common",
+      "title": "Gruppen-Variation: je Gruppe ein Parameter geändert",
+      "goal": "Zeigt, ob die Skelett-Methode funktioniert (nur das betroffene Teil ändert sich) und wie schnell sich ein Modell neu erzeugen lässt. Kern für Design-Automation.",
+      "procedure": {
+        "common": "Für jede der 10 Gruppen der Spec genau einen Parameter um einen festgelegten Schritt ändern (--set gruppe.param=wert). Je Lauf Regenerationszeit und Geometrie-Fingerabdruck je Teil mit der Baseline vergleichen.",
+        "brep": "Fingerabdruck je Teil: Volumen, Fläche, Schwerpunkt, Bounding Box, Anzahl Flächen, gerundet auf 1e-6; zusätzlich Hash der STL-Datei.",
+        "voxel": "Vergleich je Teil mit Voxels.bIsEqual gegen die Baseline plus Volumen; feste Voxelgrösse, gleiche Ausrichtung."
+      },
+      "metrics": [
+        "regen_zeit_s je Gruppe",
+        "anzahl_teile_geaendert",
+        "abweichung_volumen_mm3 der unveränderten Teile",
+        "peak_mem_mb"
+      ],
+      "success_criteria": [
+        "Änderung einer Nicht-Skelett-Gruppe ändert nur die Geometrie dieser Gruppe (Fingerabdruck der übrigen Features identisch).",
+        "Alle 10 Gruppen laufen ohne Fehler durch.",
+        "Änderung der Skelett-Gruppe darf mehrere Teile ändern."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Deterministische Skripte, Fingerabdruck einfach. Risiko: Parameter, die Booleans an Grenzfälle bringen, können einzelne Läufe scheitern lassen (Fillet, Offset)."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Gleiche Logik, bIsEqual liefert exakten Vergleich. Laufzeit dominiert durch die Voxelgrösse (Faktor 4 bis 8 je Halbierung, Hypothese). Teile werden einzeln gerendert und sind daher gut isolierbar."
+        }
+      },
+      "plan_goals": [1, 4, 5],
+      "depends_on": ["B02"],
+      "evidence": []
+    },
+    {
+      "id": "B04",
+      "section": "common",
+      "title": "Tropfenprofil: Aero-Fins und Motorgondeln 1:1",
+      "goal": "Zeigt, wie exakt und wie aufwendig die Aerodynamik-Formen der Referenz nachgebaut werden können, insbesondere die dünne Hinterkante.",
+      "procedure": {
+        "common": "Profilkennwerte (Sehne, maximale Dicke, Lage der max. Dicke, Hinterkantendicke) aus der Referenz an mindestens 3 Schnitten je Fin und je Gondel messen, Profil aus den Spec-Parametern nachbauen, danach Abweichung Schnittkontur zu Referenz messen.",
+        "brep": "Skizze mit Spline/Bezier (oder Airfoil für NACA-artige Kontur), Loft oder Sweep mit Pfeilung und Neigung; Schnitt mit section(); Abstand der Schnittkontur zur Referenz über Punkt-zu-Fläche-Abstand.",
+        "voxel": "Kontur über ShapeKernel-Splines, BaseLens, BaseRevolve oder eigene IImplicit-Funktion; Sweep entlang der Fin-Achse; Schnitt über GetVoxelSlice; Abstand zur Referenz über Voxel-Differenz."
+      },
+      "metrics": [
+        "profilabweichung_max_mm",
+        "profilabweichung_mittel_mm",
+        "hinterkantendicke_mm (soll/ist)",
+        "runtime_s",
+        "code_loc",
+        "volume_mm3 und area_mm2 je Fin/Gondel"
+      ],
+      "success_criteria": [
+        "Maximale Profilabweichung kleiner 0.1 mm (B-rep) bzw. kleiner 0.5 Voxel plus Referenzgenauigkeit (Voxel).",
+        "Hinterkante bleibt sichtbar (Dicke grösser 0 und innerhalb Toleranz).",
+        "Fin-Neigung und Pfeilung parametrisch verstellbar (Test über B03)."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Exakte Splines und Loft; build123d liefert ein Airfoil-Objekt (NACA 4-stellig, lokal geprüft) und Gordon-Flächen (Spitfire-Tutorial). Das Tropfenprofil der Referenz ist keine NACA-Form, also Spline aus Messpunkten."
+        },
+        "voxel": {
+          "status": "partial",
+          "reasoning": "Nachbau möglich, aber ohne Profilbibliothek. Hinterkante dünner als 2 bis 3 Voxel wird verrundet oder verschwindet; bei 0.25 mm Voxel Abweichung etwa eine halbe Voxelgrösse. Hypothese, im Benchmark zu messen."
+        }
+      },
+      "plan_goals": [1, 2, 3],
+      "depends_on": ["B01", "B02"],
+      "evidence": [
+        "https://build123d.readthedocs.io/en/latest/tutorial_spitfire_wing_gordon.html",
+        "https://github.com/leap71/LEAP71_ShapeKernel"
+      ]
+    },
+    {
+      "id": "B05",
+      "section": "common",
+      "title": "Wandstärke / Schale (Shell gegen Offset)",
+      "goal": "Zeigt, wie zuverlässig sich Hohlkörper mit definierter Wandstärke erzeugen lassen und wie genau die Wand wird.",
+      "procedure": {
+        "common": "Unterteil-Rumpf und Nasenkappe mit Wandstärken 2.0, 1.5, 1.0 und 0.8 mm aushöhlen (eigenes Modell aus B02) und zusätzlich einen Versuch am importierten Referenz-Unterteil. Wandstärke danach messen (Punktabstand zwischen Aussen- und Innenfläche).",
+        "brep": "offset(amount=-t, openings=...) bzw. thicken; Kind ARC und INTERSECTION probieren; Gültigkeit prüfen.",
+        "voxel": "Voxels.voxShell(offset) (Variante mit einem Argument!) bzw. voxOffset(-t) und Differenz; NICHT voxShell(neg,pos,smooth) in 2.3.0 (Rückgabe fälschlich massiv, PR 119)."
+      },
+      "metrics": [
+        "erfolg je Wandstärke und je Körper",
+        "wandstaerke_min_mm, wandstaerke_mittel_mm (gemessen)",
+        "volume_mm3 (Schale)",
+        "runtime_s",
+        "gueltig_oder_wasserdicht"
+      ],
+      "success_criteria": [
+        "Schale erzeugt, gültig bzw. wasserdicht, gemessene Wand innerhalb 10 Prozent der Sollwand (Voxel: innerhalb 1 Voxel).",
+        "Fehlschläge werden mit Meldung im result.json festgehalten (status partial statt Abbruch)."
+      ],
+      "expected": {
+        "brep": {
+          "status": "partial",
+          "reasoning": "Auf dem eigenen Modell voraussichtlich ok; auf dem importierten Freiform-Unterteil lokal gemessen: offset scheitert in 8 von 8 Versuchen (ARC und INTERSECTION, ±1 bis 3 mm: offset Error), thicken auf 10 B-Spline-Flächen nur 2 gültig. Ein Quader wird korrekt geschält."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Offset auf dem Abstandsfeld ist der Kernfall und läuft auf jeder Eingangsgeometrie. Genauigkeit etwa ein Voxel; Wandstärken unter 3 Voxeln (0.75 mm bei 0.25 mm) sind unzuverlässig."
+        }
+      },
+      "plan_goals": [1, 2, 3],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://github.com/leap71/PicoGK/pull/119"
+      ]
+    },
+    {
+      "id": "B06",
+      "section": "common",
+      "title": "Übergänge und Verrundungen (Kanten-Fillet gegen Voxel-Glättung)",
+      "goal": "Zeigt, wie sich Übergänge Arm zu Rumpf, Fin zu Rumpf und Gondel zu Arm verrunden lassen und wie selektiv das geht.",
+      "procedure": {
+        "common": "Radien 0.5, 1.0 und 2.0 mm an den Übergängen Arm-Rumpf, Fin-Rumpf, Gondel-Arm anbringen; einmal am eigenen Modell, einmal am importierten Unterteil.",
+        "brep": "Kanten über Selektoren (Schnittkanten der Booleans) wählen und fillet(); bei Fehler kleineren Radius oder andere Kantengruppe probieren.",
+        "voxel": "voxFillet(r) bzw. OverOffset(r) auf dem Teilkörper vor der Vereinigung (selektiv über Teilfelder) oder auf dem Gesamtkörper (global); Smoothen für Detailglättung."
+      },
+      "metrics": [
+        "erfolg je Radius und Körper",
+        "anteil_ungewollt_verrundeter_kanten (Selektivität)",
+        "volume_mm3 Änderung",
+        "runtime_s",
+        "kleinster_erreichter_radius_mm"
+      ],
+      "success_criteria": [
+        "Gewünschte Übergänge sind verrundet, Rest unverändert (B-rep) bzw. Verrundung sichtbar ohne Volumenverlust grösser 2 Prozent (Voxel).",
+        "Radius kleiner 2 Voxel wird als nicht darstellbar gemeldet (Voxel)."
+      ],
+      "expected": {
+        "brep": {
+          "status": "partial",
+          "reasoning": "Selektoren machen gezieltes Verrunden möglich; auf freien B-Spline-Flächen des Imports lokal 0 von 3 Versuchen (Radius 0.3 mm, 1/3/10 Kanten) erfolgreich. Eigenes Modell voraussichtlich zuverlässiger."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Fillet ist eine Feldoperation und läuft immer, wirkt aber global auf alle konvexen und konkaven Details; keine Kantenauswahl. Selektive Wirkung nur durch Arbeiten an Teilfeldern."
+        }
+      },
+      "plan_goals": [1, 2, 3],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://github.com/leap71/PicoGK"
+      ]
+    },
+    {
+      "id": "B07",
+      "section": "common",
+      "title": "Masseneigenschaften und Genauigkeit in Abhängigkeit der Voxelgrösse",
+      "goal": "Zeigt, wie genau Volumen, Masse, Schwerpunkt und Trägheit sind und wie der Fehler mit der Voxelgrösse skaliert. Belegt das Genauigkeitsmodell exakt gegen Voxel.",
+      "procedure": {
+        "common": "Volumen, Fläche, Masse (Dichte aus mock_data.json), Schwerpunkt und Trägheitstensor je Teil; als Wahrheit dient B-rep.",
+        "brep": "volume, area, center(CenterOf.MASS), matrix_of_inertia, mass; einmal je Teil.",
+        "voxel": "Voxelgrössen 2.0, 1.0, 0.5, 0.25 und 0.125 mm (soweit der Speicher reicht): Volumen über CalculateProperties; Schwerpunkt und Trägheit selbst über Mesh- oder Voxelsummen berechnen; Fehler gegen B-rep."
+      },
+      "metrics": [
+        "volumen_fehler_prozent je voxel_size",
+        "schwerpunkt_fehler_mm je voxel_size",
+        "traegheit_fehler_prozent je voxel_size",
+        "konvergenzordnung",
+        "runtime_s und peak_mem_mb je voxel_size"
+      ],
+      "success_criteria": [
+        "Fehlerkurve über mindestens 4 Voxelgrössen liegt vor.",
+        "Voxelgrösse für 1 Prozent Volumenfehler ist angegeben.",
+        "B-rep-Werte sind die Referenz und werden mit Einheit und Dichte dokumentiert."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Exakt bis auf Integrationsrauschen (lokal 5 ppm bei nicht schneidendem Boolean). Trägheitsmatrix vorhanden."
+        },
+        "voxel": {
+          "status": "partial",
+          "reasoning": "Nur Volumen und Bounding Box sind eingebaut (CalculateProperties); Schwerpunkt und Trägheit müssen selbst gerechnet werden. Fehler bei dünnen Schalen deutlich grösser als bei massiven Körpern (1.5 mm Wand sind nur 6 Voxel bei 0.25 mm). Erwartung: unter 1 Prozent bei massiven Teilen mit 0.25 mm, bei Schalen mehrere Prozent."
+        }
+      },
+      "plan_goals": [1, 2, 3],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://github.com/leap71/PicoGK"
+      ]
+    },
+    {
+      "id": "B08",
+      "section": "common",
+      "title": "Mesh-Export für den 3D-Druck (STL, 3MF) und Druckbarkeits-Check",
+      "goal": "Zeigt, ob und wie gut druckfertige Netze entstehen und wie die Druckbarkeit automatisch geprüft wird.",
+      "procedure": {
+        "common": "Gesamtmodell und je Teil als binäres STL exportieren, zusätzlich 3MF wenn möglich; Prüfung: wasserdicht (jede Kante von genau 2 Dreiecken geteilt), Normalen konsistent, Mindestwand, Überhangwinkel gegen Bauplatte (Grenze 45 Grad).",
+        "brep": "export_stl(tolerance, angular_tolerance) und Mesher.write für 3MF; Prüfung mit eigenem Skript (Demo analysis.py).",
+        "voxel": "new Mesh(voxels) und SaveToStlFile; 3MF nicht vorhanden; Überhang über den Overhang-Datentyp bzw. eigene Normalenprüfung; Mindestwand über Offset-Test."
+      },
+      "metrics": [
+        "export_zeit_s",
+        "dreiecke",
+        "dateigroesse_mb je Format",
+        "wasserdicht (ja/nein)",
+        "min_wand_mm",
+        "ueberhang_flaeche_mm2"
+      ],
+      "success_criteria": [
+        "Gültiges wasserdichtes STL je Teil.",
+        "3MF geschrieben oder Grund für unsupported/failed angegeben.",
+        "Druckbarkeitsbericht mit Mindestwand und Überhang liegt vor."
+      ],
+      "expected": {
+        "brep": {
+          "status": "partial",
+          "reasoning": "STL ok (lokal 0.18 s, 3.6 MB bei 0.05 mm Toleranz). 3MF über Mesher funktioniert bei einfachen Körpern, scheiterte lokal am importierten Unterteil (AttributeError NbNodes, eine Fläche ohne Triangulation, auch bei gröberer Abweichung)."
+        },
+        "voxel": {
+          "status": "partial",
+          "reasoning": "STL wasserdicht per Konstruktion (Netz aus geschlossenem Abstandsfeld), Grösse wächst mit 1/Voxel². Kein 3MF (Feature-Wunsch offen), also für 3MF unsupported; ASCII-STL nicht ladbar."
+        }
+      },
+      "plan_goals": [1, 2, 5],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://build123d.readthedocs.io/en/latest/llms-full.txt",
+        "https://github.com/leap71/LEAP71_LatticeLibrary/issues/3"
+      ]
+    },
+    {
+      "id": "B09",
+      "section": "common",
+      "title": "Aero-Vorbereitung: Stirnfläche, benetzte Fläche, Strömungsdomäne",
+      "goal": "Zeigt, wie gut sich aus dem Modell die Grössen und Dateien für eine Strömungssimulation (CFD) ableiten lassen.",
+      "procedure": {
+        "common": "Stirnfläche in Anströmrichtung (+X laut Demo, ggf. Flugrichtung aus der Spec), benetzte Fläche (Oberfläche), Strömungsdomäne als Quader um den Körper (5-fache Länge stromab, 2-fache stromauf, 3-fache seitlich) minus Körper, Export für den Netzgenerator.",
+        "brep": "project() bzw. Schatten des Körpers auf die Ebene, Fläche exakt; area für benetzte Fläche; Domäne per Boolean; Export STEP (für Gmsh/OpenCASCADE) und STL (für snappyHexMesh).",
+        "voxel": "Projektion durch Zählen der Strahlen/Voxel in Anströmrichtung; benetzte Fläche aus Netz; Domäne per voxBoolSubtract; Export STL und VDB (ScalarField aus Voxels)."
+      },
+      "metrics": [
+        "stirnflaeche_mm2",
+        "benetzte_flaeche_mm2",
+        "domaenen_volumen_mm3",
+        "abweichung_voxel_zu_brep_prozent",
+        "runtime_s",
+        "ausgabedateien und Grösse",
+        "netzgenerator_akzeptiert (optional, wenn OpenFOAM/Gmsh installiert)"
+      ],
+      "success_criteria": [
+        "Stirnfläche und benetzte Fläche liegen als Zahl vor.",
+        "Domäne ist ein geschlossener Körper und im Zielformat lesbar.",
+        "Bei installiertem Netzgenerator entsteht ein Netz; sonst wird 'nicht gemessen' vermerkt."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Exakte Flächen; STEP für Gmsh (liest STEP über OpenCASCADE) und STL für snappyHexMesh (verlangt STL/OBJ) sind Standardwege. Benannte Randflächen (Einlass, Auslass, Wand) möglich."
+        },
+        "voxel": {
+          "status": "partial",
+          "reasoning": "Domäne und Felder direkt; Stirnfläche über Voxelzählung mit einem Fehler in der Grössenordnung Umfang mal Voxel/2. Kein STEP, keine benannten Flächen, Wandrand mit Treppeneffekt. Voxelnativer Löser (Lattice-Boltzmann) wäre der Zielpfad; FluidX3D ist wegen der Lizenz (kommerzielle und militärische Nutzung verboten) keine Option."
+        }
+      },
+      "plan_goals": [1, 3, 5],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://gmsh.info/doc/texinfo/gmsh.html",
+        "https://doc.cfd.direct/openfoam/user-guide-v13/snappyhexmesh",
+        "https://github.com/ProjectPhysX/FluidX3D/blob/master/LICENSE.md"
+      ]
+    },
+    {
+      "id": "B10",
+      "section": "common",
+      "title": "Performance und Skalierung: Laufzeit, RAM, Dateigrösse",
+      "goal": "Zeigt, wie Laufzeit und Speicher mit Komplexität und Auflösung skalieren und wo die Grenzen liegen.",
+      "procedure": {
+        "common": "B02 in mehreren Grössenstufen: Armzahl 3, 4, 6, 8; Fillets an/aus; Voxel zusätzlich 1.0, 0.5, 0.25, 0.125 mm. Je Lauf ein frischer Prozess, Wandzeit und Peak-RAM (Working Set) von aussen messen.",
+        "brep": "Skalierung über Armzahl und Detailgrad; Dateigrösse STEP und STL.",
+        "voxel": "Skalierung über Voxelgrösse; Dateigrösse STL und VDB; lib.nTotalMemUsage() als Zusatzmetrik."
+      },
+      "metrics": [
+        "wall_time_s",
+        "peak_mem_mb",
+        "dateigroesse_mb (step, stl, vdb)",
+        "skalierungsexponent (log-log)",
+        "abbruch_bei (Stufe)"
+      ],
+      "success_criteria": [
+        "Mindestens 4 Stufen je Tool mit Zeit und RAM.",
+        "Skalierungsverhalten (Steigung) ist angegeben.",
+        "Grenzen (Abbruch, OOM, Zeitlimit 10 min) sind dokumentiert."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Zeit hängt von Flächenzahl und Booleans ab, nicht von der Grösse in mm; Speicher klein (lokal Import 5.6 MB STEP in 5.3 s). Re-Export STEP 12.8 MB (2.3-fach vom Original)."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Speicher und Zeit steigen mit Oberfläche/Voxel², grob Faktor 4 bis 8 je Halbierung. OpenVDB nutzt TBB (mehrkernig). Feine Voxelgrössen unter 0.34 mm können bei IntersectImplicit abbrechen (Issue 26); bei der Laufzeitmessung das Ausnahmeverhalten notieren."
+        }
+      },
+      "plan_goals": [1, 4, 5],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://github.com/leap71/PicoGKRuntime/issues/26"
+      ]
+    },
+    {
+      "id": "V01",
+      "section": "voxel_only",
+      "title": "Gitter-Infill (Lattice) im Fin und im Rumpfsegment",
+      "goal": "Zeigt die Kernstärke von Voxel: Leichtbau-Gitter und TPMS (Gyroid) in beliebiger Form, wo B-rep an den Boolean-Kosten scheitert.",
+      "procedure": {
+        "common": "Gitter mit Zellgrösse 6 mm, Strebendurchmesser 0.8 mm bzw. Gyroid-Wand 0.8 mm im Volumen eines Fins (body_fins) und eines Rumpfsegments (lower_body), umgeben von 1.2 mm Aussenhaut. Volumenanteil und Streben zählen.",
+        "brep": "Balkengitter als Vereinigung von Zylindern und Kugeln in Stufen 10, 100, 500, 1000 Streben; Zeit je Stufe messen und auf 10'000 Streben extrapolieren; Gyroid nicht nativ (Netz über Marching Cubes ausserhalb, kein B-rep).",
+        "voxel": "Lattice.AddBeam/AddSphere mit Voxels.RenderLattice, oder Gyroid über IImplicit; ShapeKernel/LatticeLibrary-Zellarrays; schneiden mit dem Fin-Volumen (BoolIntersect). Hinweis 2.3.0: IntersectImplicit bricht bei Voxel kleiner 0.34 mm ab; dann RenderImplicit oder Lattice wählen und Voxel mindestens 0.35 mm."
+      },
+      "metrics": [
+        "runtime_s je Stufe",
+        "peak_mem_mb",
+        "anzahl_streben",
+        "volumenanteil_prozent",
+        "dreiecke und dateigroesse_mb",
+        "gewicht_reduktion_prozent",
+        "wasserdicht"
+      ],
+      "success_criteria": [
+        "Gitter im Fin-Volumen erzeugt, wasserdicht, Aussenhaut erhalten.",
+        "Skalierung der Zeit mit der Strebenanzahl dokumentiert (Voxel gegen B-rep).",
+        "Gewichtsreduktion gegen massiv gerechnet."
+      ],
+      "expected": {
+        "brep": {
+          "status": "partial",
+          "reasoning": "Machbar mit vielen Zylindern und Booleans, aber die Zeit steigt stark mit der Strebenanzahl und das Ergebnis kann ungültig werden (Hypothese: 1000 Streben Minuten bis Stunden). Kein TPMS/Gyroid, keine Gitterbibliothek in build123d (0 Treffer in der Doku)."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Nativer Lattice-Typ und Implicit Library (Gyroid, Schwarz P/D, Lidinoid, konforme Zellarrays) in der LatticeLibrary. Ausnahme: ein Abbruch bei IntersectImplicit unter 0.34 mm Voxel ist als Fehler offen (Runtime-Issue 26)."
+        }
+      },
+      "plan_goals": [1, 2, 3],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://github.com/leap71/LEAP71_LatticeLibrary",
+        "https://github.com/leap71/PicoGKRuntime/issues/26"
+      ]
+    },
+    {
+      "id": "V02",
+      "section": "voxel_only",
+      "title": "Konforme Kühlluftkanäle durch den Rumpf",
+      "goal": "Zeigt, wie Kanäle mit konstantem Abstand zur Aussenhaut, mit variablem Querschnitt und glatten Übergängen erzeugt werden, wie sie für Motor- und Elektronikkühlung nötig sind.",
+      "procedure": {
+        "common": "6 Kanäle mit 4 mm Durchmesser vom Lufteinlass am Nasenbereich entlang der Aussenkontur bis zu den Motorgondeln, 3 mm unter der Aussenhaut, Übergang zum Auslass mit sanftem Querschnittswechsel. Danach Wandabstand, Durchgängigkeit und Kanalvolumen prüfen.",
+        "brep": "Bahnkurve als 3D-Spline von Hand oder aus Schnittkurven konstruieren, Sweep eines Kreises, Boolean-Subtraktion; Offsetflächen nur auf parametrischen Flächen.",
+        "voxel": "Innen-Offset des Aussenfeldes (voxOffset(-3)) als Bahnführung, Kanäle über Rohrkurven (BasePipe, LatticePipe oder Lattice-Balken mit variablem Radius), Subtraktion, Übergänge mit Fillet glätten."
+      },
+      "metrics": [
+        "kanal_durchgaengig (Flood Fill oder Pfadsuche)",
+        "wandabstand_min_mm und _max_mm",
+        "kanalvolumen_mm3",
+        "druckverlust_indikator (Durchmesserverlauf)",
+        "runtime_s",
+        "code_loc"
+      ],
+      "success_criteria": [
+        "Alle 6 Kanäle durchgängig, Wandabstand zur Aussenhaut innerhalb 0.5 mm des Sollwerts (B-rep) bzw. 1 Voxel (Voxel).",
+        "Körper danach wasserdicht bzw. gültig."
+      ],
+      "expected": {
+        "brep": {
+          "status": "partial",
+          "reasoning": "Wenige Kanäle mit Sweep machbar; konstanter Wandabstand zu einer Freiformfläche erfordert eine Offset-Fläche, die auf der Referenz lokal nicht erzeugbar war (offset Error). Viele Kanäle und variabler Querschnitt sind aufwendig."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Abstandsfelder machen konstanten Wandabstand trivial; Rohr-Konstrukte im ShapeKernel und das Wärmetauscher-Referenzprojekt (HelixHeatX) belegen den Anwendungsfall. Wandabstand nur voxelgenau."
+        }
+      },
+      "plan_goals": [1, 2, 3],
+      "depends_on": ["B02", "B05"],
+      "evidence": [
+        "https://github.com/leap71/LEAP71_ShapeKernel",
+        "https://github.com/leap71/LEAP71_HelixHeatX"
+      ]
+    },
+    {
+      "id": "V03",
+      "section": "voxel_only",
+      "title": "Robuste Booleans auf Mesh-/Scan-Daten und feldbasierte (variable) Wandstärke",
+      "goal": "Zeigt, dass Voxel auch auf fehlerhaften Netzen zuverlässig rechnet und dass Wandstärke als Funktion des Ortes einfach ist.",
+      "procedure": {
+        "common": "(a) Aus dem STL der Referenz (inklusive der 3 nicht als Solid gültigen Hüllen) eine Bohrung schneiden, einen Zylinder vereinigen und aushöhlen. (b) Wand am Fin-Ansatz 1.6 mm, an der Spitze 0.8 mm (linear über die Spannweite).",
+        "brep": "STL laden (import_stl), Solid aus der Hülle bilden und Boolean versuchen; Ergebnis prüfen. Variable Wand: Schalen aus mehreren Offsetschnitten loften oder Stufen bilden.",
+        "voxel": "Mesh(STL) rendern (voxMeshShell akzeptiert auch offene Netze), Booleans direkt; variable Wand über IImplicit oder ScalarField-gesteuertes Offset in Abschnitten."
+      },
+      "metrics": [
+        "erfolgsquote booleans (a)",
+        "runtime_s",
+        "ergebnis_gueltig",
+        "wandstaerke_profil gemessen (b): Abweichung vom Soll in mm",
+        "code_loc"
+      ],
+      "success_criteria": [
+        "Alle Booleans (a) liefern ein Ergebnis mit positivem Volumen und ohne Abbruch.",
+        "Wandprofil (b) innerhalb 0.2 mm (B-rep) bzw. 1 Voxel (Voxel) des Sollverlaufs."
+      ],
+      "expected": {
+        "brep": {
+          "status": "failed",
+          "reasoning": "import_stl liefert lokal eine Dreiecksschale (1 Face, is_valid False); der daraus gebildete Solid ist ungültig. Booleans auf Dreiecksschalen sind unzuverlässig und langsam. Variable Wand nur als Umweg."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Das Netz wird zum Abstandsfeld und ist dadurch robust gegen Löcher und Überlappungen; Feldfunktionen erlauben ortsabhängige Wand. Voraussetzung: binäres STL (ASCII nicht ladbar) und die Fehler aus PicoGK 2.3.0 vermeiden."
+        }
+      },
+      "plan_goals": [1, 2, 3],
+      "depends_on": ["B01"],
+      "evidence": [
+        "https://github.com/leap71/PicoGK"
+      ]
+    },
+    {
+      "id": "V04",
+      "section": "voxel_only",
+      "title": "Slices für den Druck (CLI, Bilder, Konturen)",
+      "goal": "Zeigt den Weg vom Modell zu druckerfertigen Schichten (Laser-Pulverbett) und den Aufwand in B-rep.",
+      "procedure": {
+        "common": "Fin und Rumpfsegment mit 0.05 mm Schichtdicke schneiden, Ausgabe je Schicht als Kontur (CLI-Datei oder Polygone) und zur Kontrolle als PNG für 3 Schichten.",
+        "brep": "Schnitt mit section() je Ebene, Wires zu Polygon, Ausgabe DXF/SVG je Ebene; CLI-Format selbst schreiben; Zeit für 100 und 500 Schichten messen und hochrechnen.",
+        "voxel": "Voxels.SaveToCliFile (ASCII-CLI seit 1.7.0) bzw. oVectorize, GetVoxelSlice für Bilder; Zeit messen."
+      },
+      "metrics": [
+        "runtime_s für n Schichten",
+        "schichtzahl",
+        "dateigroesse_mb",
+        "cli_gueltig (Einlesetest)",
+        "code_loc"
+      ],
+      "success_criteria": [
+        "Schichtdatei entsteht und lässt sich wieder einlesen (CliIo.oSlicesFromCliFile bzw. Viewer).",
+        "Konturen decken sich mit dem Modell innerhalb 1 Voxel."
+      ],
+      "expected": {
+        "brep": {
+          "status": "partial",
+          "reasoning": "section liefert Konturen, aber je Ebene ein Boolean auf dem Körper; 500 Schichten dauern voraussichtlich Minuten. Kein CLI-Schreiber; DXF/SVG ist vorhanden."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Nativer CLI-Export und Slice-Funktionen (GetVoxelSlice, GetInterpolatedVoxelSlice, oVectorize). Schichtdicke unabhängig von der Voxelgrösse durch Interpolation, aber die Auflösung in der Ebene bleibt die Voxelgrösse."
+        }
+      },
+      "plan_goals": [1, 2],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://github.com/leap71/PicoGK/releases"
+      ]
+    },
+    {
+      "id": "R01",
+      "section": "brep_only",
+      "title": "Bemasste technische Zeichnung",
+      "goal": "Zeigt die Fähigkeit, aus dem Modell eine Werkstattzeichnung mit Ansichten, Massen und Schriftfeld abzuleiten.",
+      "procedure": {
+        "common": "Zeichnung Oberteil-Rumpf (Vorlage drawing.py, 2 x A3): Vorderansicht, Seitenansicht, Draufsicht, Schnitt; wichtigste Masse (Rohr, Arm, Gondel, Schlitz) automatisch bemassen; Ausgabe DXF und SVG.",
+        "brep": "TechnicalDrawing, DimensionLine, Compound.project_to_viewport, ExportDXF/ExportSVG; Masse aus den Modellparametern.",
+        "voxel": "Nicht vorgesehen: nur Silhouette aus Slices oder Netzprojektion und eigene Bemassung im Code; sonst status unsupported."
+      },
+      "metrics": [
+        "anzahl_ansichten",
+        "anzahl_masse",
+        "masswerte_korrekt (Abgleich zur Spec)",
+        "runtime_s",
+        "code_loc"
+      ],
+      "success_criteria": [
+        "Zeichnung enthält mindestens 3 Ansichten und die Hauptmasse mit korrekten Werten.",
+        "Datei öffnet in einem DXF/SVG-Viewer."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Die bestehende Demo (drawing.py, 339 Zeilen) liefert bereits die bemasste Zeichnung; build123d hat TechnicalDrawing und DimensionLine."
+        },
+        "voxel": {
+          "status": "unsupported",
+          "reasoning": "PicoGK kennt keine Kanten, Flächen oder Zeichnungsableitung; Ausgabe nur Netz, VDB, CLI, Bild. Eine Bemassung wäre reine Eigenentwicklung auf Netzbasis."
+        }
+      },
+      "plan_goals": [2],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://build123d.readthedocs.io/en/latest/tech_drawing_tutorial.html"
+      ]
+    },
+    {
+      "id": "R02",
+      "section": "brep_only",
+      "title": "Exakter STEP-Export und Kanten/Flächen-Selektoren",
+      "goal": "Zeigt den Austausch mit CAD und Fertigung ohne Genauigkeitsverlust und den gezielten Zugriff auf Geometrieelemente.",
+      "procedure": {
+        "common": "Gesamtmodell als STEP ausgeben, neu einlesen, Volumen und Flächenzahl vergleichen. Selektoren: alle zylindrischen Flächen der Gondeln, alle Kanten in der Trennebene, grösste ebene Fläche des Rumpfes.",
+        "brep": "export_step, import_step, faces().filter_by(GeomType.CYLINDER), edges().group_by(Axis.Z), sort_by.",
+        "voxel": "STEP-Export nicht vorhanden; Ersatz: Netz-STEP über ein externes Werkzeug (mit sehr vielen Dreiecksflächen); Selektion nur über Koordinatenabfragen (bIsInside, Strahl, nächster Punkt)."
+      },
+      "metrics": [
+        "step_groesse_mb",
+        "roundtrip_volumen_abweichung_mm3",
+        "anzahl_flaechen",
+        "selektor_treffer (Anzahl und Korrektheit)",
+        "runtime_s"
+      ],
+      "success_criteria": [
+        "STEP-Roundtrip Volumenabweichung kleiner 0.01 Prozent.",
+        "Selektoren liefern die erwartete Anzahl Elemente (Abgleich mit der Spec)."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Nativ. Lokal: export_step 0.62 s, 12.8 MB für das Unterteil (das Original hat 5.6 MB, andere Schreibweise)."
+        },
+        "voxel": {
+          "status": "unsupported",
+          "reasoning": "Kein STEP, keine Topologie. Ein Netz nach STEP hätte Zehntausende Dreiecksflächen und ist in CAD nicht editierbar."
+        }
+      },
+      "plan_goals": [2, 4],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://build123d.readthedocs.io/en/latest/topology_selection.html"
+      ]
+    },
+    {
+      "id": "R03",
+      "section": "brep_only",
+      "title": "Constraints, Skelett, Baugruppen-Joints und URDF",
+      "goal": "Zeigt die Baugruppen- und Kinematik-Fähigkeit: Teile über Verbindungspunkte positionieren, Skelett-Master prüfen, Simulator-Export.",
+      "procedure": {
+        "common": "Skelett-Methode prüfen (Ergebnis aus B03 wiederverwenden), Oberteil und Unterteil sowie Nase und Oberteil über Verbindungspunkte fügen, Schlitz und Lasche mit Spiel; URDF-Datei mit Verbindungen und Massenangaben.",
+        "brep": "RigidJoint/RevoluteJoint, connect_to; URDF aus Joint-Baum und STL je Teil (Demo analysis.py).",
+        "voxel": "Position über eigene Frames (Frame3d, Transformationen), keine Joints; URDF als Hand-Export mit STL je Teil."
+      },
+      "metrics": [
+        "anzahl_joints",
+        "positionierfehler_mm",
+        "urdf_gueltig (Einlesetest mit Standard-Parser)",
+        "code_loc"
+      ],
+      "success_criteria": [
+        "Teile sitzen mit Positionierfehler kleiner 0.01 mm (B-rep) bzw. 1 Voxel (Voxel).",
+        "URDF wird von einem Standard-Parser gelesen."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "build123d hat Rigid-, Revolute-, Linear-, Cylindrical- und BallJoint; die Demo exportiert bereits URDF."
+        },
+        "voxel": {
+          "status": "partial",
+          "reasoning": "Keine Baugruppen- oder Constraint-Schicht; Frames und Transformationen sind nutzbar, alles andere ist Eigenbau. URDF lässt sich mit STL-Teilen von Hand schreiben, hat aber keine geometrische Bindung an Verbindungsflächen."
+        }
+      },
+      "plan_goals": [2, 4, 5],
+      "depends_on": ["B02", "B03"],
+      "evidence": [
+        "https://build123d.readthedocs.io/en/latest/tutorial_joints.html"
+      ]
+    },
+    {
+      "id": "R04",
+      "section": "brep_only",
+      "title": "Exakte Masse, Toleranzen und Passungen",
+      "goal": "Zeigt, ob definierte Passungsspiele (Steckverbindung Oberteil/Unterteil, Nase/Oberteil) exakt darstellbar und prüfbar sind.",
+      "procedure": {
+        "common": "Schlitz und Lasche mit Spiel 0.2, 0.1 und 0.05 mm modellieren (joints-Gruppe der Spec); Überdeckungsvolumen (soll 0) und kleinsten Abstand prüfen; Masse mit Dichte aus mock_data.json.",
+        "brep": "Überdeckung per Boolean-Schnitt (Volumen 0), kleinster Abstand per distance_to, Masse exakt.",
+        "voxel": "Gleiche Modellierung bei Voxelgrössen 0.25, 0.1, 0.05 mm; Überdeckung über Feldschnitt; kleinster Abstand über bClosestPointOnSurface."
+      },
+      "metrics": [
+        "gemessenes_spiel_mm vs Sollspiel",
+        "ueberdeckung_mm3",
+        "masse_fehler_prozent",
+        "voxel_size_noetig_fuer_spiel_mm",
+        "runtime_s und peak_mem_mb"
+      ],
+      "success_criteria": [
+        "Gemessenes Spiel innerhalb 0.005 mm (B-rep).",
+        "Für Voxel: Grösse, ab der das Sollspiel auf 20 Prozent genau stimmt, ist angegeben."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Exakte Geometrie, Masse als Modelleingabe, Kollisions- und Abstandsprüfung nativ."
+        },
+        "voxel": {
+          "status": "partial",
+          "reasoning": "Ein Spiel unter etwa zwei Voxeln ist nicht darstellbar (0.1 mm Spiel braucht Voxel unter 0.05 mm, Speicher wächst um Faktor 25 gegenüber 0.25 mm). bIsInside in 2.3.0 als fehlerhaft gemeldet (PR 115), auf Windows nicht geprüft."
+        }
+      },
+      "plan_goals": [2, 5],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://github.com/leap71/PicoGK/pull/115"
+      ]
+    },
+    {
+      "id": "A01",
+      "section": "api",
+      "title": "API und Sprache",
+      "goal": "Belegt, wie das Programmiermodell beider Werkzeuge aussieht und was es für Wartung und Lesbarkeit bedeutet.",
+      "procedure": {
+        "common": "Qualitativ und quantitativ: Sprache, Paradigma, Typisierung, Namensschema, Codezeilen je Aufgabe (code_loc aus B02, B04, B05, V01), Zeit bis zum ersten lauffähigen Ergebnis, Build-Schritt.",
+        "brep": "Python 3.12, build123d 0.13.0, Builder- und Algebra-Modus, py.typed.",
+        "voxel": "C# .NET 9, PicoGK 2.3.0, Library-Instanzen, ungarisch anmutende Namen (voxBoolAdd), Operatoren, dotnet build."
+      },
+      "metrics": [
+        "code_loc je Aufgabe",
+        "anzahl_api_konzepte",
+        "build_zeit_s",
+        "typsicherheit (Skala 1 bis 5)",
+        "aenderungen_am_modell_pro_parameter (Codestellen)"
+      ],
+      "success_criteria": [
+        "Tabelle code_loc je Aufgabe und Tool liegt vor.",
+        "Bewertung wird mit Beispielzeilen belegt."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Python, kurzer Code je Feature, aber 0.x-API mit Breaking Changes (0.10.0 Methoden zu Properties, 0.12.0 Entfernungen)."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "C# stark typisiert, dafür längerer Code und eigenes Namensschema; API 2.x hat Library-Instanzen und Breaking Changes in Minor-Versionen (2.3.0)."
+        }
+      },
+      "plan_goals": [4],
+      "depends_on": ["B02"],
+      "evidence": [
+        "https://pypi.org/project/build123d/",
+        "https://www.nuget.org/packages/PicoGK"
+      ]
+    },
+    {
+      "id": "A02",
+      "section": "api",
+      "title": "Headless- und CLI-Betrieb",
+      "goal": "Belegt, dass beide Werkzeuge ohne Oberfläche, ohne Fenster und parallel in Skripten laufen.",
+      "procedure": {
+        "common": "Alle Aufgaben über den CLI-Vertrag (python -m brep.cli bzw. dotnet run) in frischen Prozessen ausführen, ohne Display, mit Exit-Code und result.json. Kaltstart messen, 4 Prozesse parallel starten.",
+        "brep": "python -m brep.cli --task B02 ...; Import-Zeit von build123d messen.",
+        "voxel": "dotnet run --project voxel -c Release -- ...; new Library(voxelSize) statt Library.Go; Kaltstart einschliesslich Build messen."
+      },
+      "metrics": [
+        "kaltstart_s",
+        "erfolgsquote ohne Display",
+        "exit_code_korrekt_bei_fehler",
+        "parallel_speedup_4_prozesse",
+        "abstuerze_prozess (native)"
+      ],
+      "success_criteria": [
+        "Alle geometrischen Aufgaben laufen ohne Fenster.",
+        "Fehler ergeben Exit-Code ungleich 0 und einen Eintrag im result.json.",
+        "4 parallele Läufe ohne Datenverlust."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Reines Python, kein Fenster nötig; alle Schritte der Demo-Pipeline laufen bereits headless."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Headless seit 1.6.0 belegt (Discussion 30). Native Ausnahmen (Issue 27) beenden den Prozess ohne C#-Ausnahme; der Runner muss Exit-Code und fehlendes result.json als failed werten. Ein Batch-Absturz durch den Speicher-Timer (Issue 31) wurde unter Linux in etwa 1 Prozent der Läufe beobachtet."
+        }
+      },
+      "plan_goals": [4, 5],
+      "depends_on": [],
+      "evidence": [
+        "https://github.com/leap71/PicoGK/discussions/30",
+        "https://github.com/leap71/PicoGKRuntime/issues/27"
+      ]
+    },
+    {
+      "id": "A03",
+      "section": "api",
+      "title": "Eignung für KI-Agents",
+      "goal": "Belegt, wie gut sich Aufgaben mit einem KI-Coding-Agent in beiden Werkzeugen lösen lassen: Dokumentation, Fehlermeldungen, Codezeilen, Iterationen.",
+      "procedure": {
+        "common": "Beim Bau von B02, B04 und B05 protokollieren die beiden Agents: Anzahl Iterationen bis zum lauffähigen Ergebnis, Anzahl erfundener oder falscher API-Aufrufe, Verständlichkeit der Fehlermeldungen (1 bis 5), Nutzung der Doku, Tokenverbrauch, Codezeilen. Ergebnisse in result.json notes und docs.",
+        "brep": "Doku-Zugang über llms.txt/llms-full.txt (591 KB); Typhinweise (py.typed).",
+        "voxel": "Doku: picogk.org/doc, XML-Kommentare im Code, Buch; kein llms.txt; Versionsdrift 1.x/2.x in Beispielen."
+      },
+      "metrics": [
+        "iterationen_bis_erstes_lauffaehiges_ergebnis",
+        "falsche_api_aufrufe",
+        "fehlermeldung_verstaendlichkeit_1_bis_5",
+        "code_loc",
+        "doku_verfuegbar_kb",
+        "tokens"
+      ],
+      "success_criteria": [
+        "Protokoll je Aufgabe und Tool liegt vor.",
+        "Ergebnis wird in Bezug zu den Trainingsdaten (Menge öffentlicher Beispiele) gestellt."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Offizielles llms-full.txt (591 KB, rund 150'000 Token geschätzt), viele öffentliche Beispiele, Python. Schwäche: 0.x-Versionsdrift und wenig aussagekräftige OCCT-Fehler (offset Error, alternative kind)."
+        },
+        "voxel": {
+          "status": "partial",
+          "reasoning": "C# ist stark trainiert, aber die PicoGK-API ist eigen, öffentliche Beispiele sind wenige und teils aus 1.x. Der Compiler ist ein guter Rückkanal. Bekannte Fallen (voxShell 3-Arg, IntersectImplicit, bIsInside) muss eine Projektregel-Datei nennen."
+        }
+      },
+      "plan_goals": [4, 5],
+      "depends_on": ["B02", "B04", "B05"],
+      "evidence": [
+        "https://build123d.readthedocs.io/en/latest/llms.txt",
+        "https://picogk.org/doc/"
+      ]
+    },
+    {
+      "id": "A04",
+      "section": "api",
+      "title": "Pipeline-Integration",
+      "goal": "Belegt, wie gut sich jedes Werkzeug in eine automatische Kette Spec - Modell - Analyse - Export - Bericht einfügt.",
+      "procedure": {
+        "common": "Durchlauf Spec (JSON) -> Modell -> Metriken (result.json) -> Export -> Bericht über den Runner in bench/. Prüfen: Determinismus (gleiche Eingabe, gleicher Hash), Fehlerisolation, benötigte manuelle Schritte, Container-Fähigkeit (Linux/CI), Schnittstellenformate.",
+        "brep": "pip install, ein Prozess je Aufruf, Ausgaben STEP/STL/DXF/SVG.",
+        "voxel": "dotnet build/run, NuGet-Paket, Ausgaben STL/VDB/CLI; Linux nur über selbst gebaute Runtime (PR 90 und 30 offen)."
+      },
+      "metrics": [
+        "automatisierte_schritte",
+        "manuelle_schritte",
+        "determinismus (Hash gleich bei 3 Läufen)",
+        "linux_container_moeglich (offiziell)",
+        "schnittstellenformate"
+      ],
+      "success_criteria": [
+        "Kette läuft ohne manuellen Eingriff für beide Tools.",
+        "Determinismus und Fehlerisolation sind dokumentiert."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Standard-Python-Werkzeugkette, Linux-, Windows- und macOS-Wheels, Container ohne Aufwand."
+        },
+        "voxel": {
+          "status": "partial",
+          "reasoning": "Windows und macOS offiziell, Linux nicht (Community-Builds, offene PRs); Interop mit der Python-Pipeline über Prozessaufruf und Dateien. Prozessabbrüche bei nativen Fehlern müssen abgefangen werden."
+        }
+      },
+      "plan_goals": [4, 5],
+      "depends_on": ["B02", "B03"],
+      "evidence": [
+        "https://github.com/leap71/PicoGK/pull/90",
+        "https://github.com/leap71/PicoGKRuntime/issues/30"
+      ]
+    },
+    {
+      "id": "A05",
+      "section": "api",
+      "title": "Lizenz, Plattform, Reife und Community",
+      "goal": "Belegt die Rahmenbedingungen für die Wahl: rechtlich, technisch, organisatorisch.",
+      "procedure": {
+        "common": "Datenerhebung aus GitHub-API, PyPI/NuGet, Release-Notes und Lizenztexten (Stand 30.09.2026). Keine Messung; im Bericht mit Datum.",
+        "brep": "build123d 0.13.0: Apache-2.0; Windows/Linux/macOS; 3'236 Sterne, 87 Contributors, 313 offene Issues/PRs, rund 609'500 PyPI-Downloads pro Monat; Rhythmus 0.9 bis 0.13 in 20 Monaten.",
+        "voxel": "PicoGK 2.3.0: Apache-2.0; Windows x64 und macOS arm64; 1'121 Sterne, 4 Contributors (Hauptautor 321 Commits), 3 offene PRs, Issues deaktiviert, NuGet 34'500 Downloads; Nachfolger PicoGK.Core (.NET 10) angekündigt."
+      },
+      "metrics": [
+        "lizenz",
+        "plattformen",
+        "sterne, forks, contributors",
+        "offene_issues",
+        "release_abstand_tage",
+        "bus_factor_einschaetzung",
+        "kommerzielle_nutzung_und_ruestung_erlaubt (ja/nein)"
+      ],
+      "success_criteria": [
+        "Tabelle mit allen Kennzahlen, Datum und Quelle.",
+        "Lizenzfragen (kommerziell, Rüstung) sind für beide Werkzeuge und die genannten Zusatzwerkzeuge (z. B. FluidX3D) beantwortet."
+      ],
+      "expected": {
+        "brep": {
+          "status": "ok",
+          "reasoning": "Grosse aktive Community, Apache-2.0, breite Plattformabdeckung, aber Version 0.x."
+        },
+        "voxel": {
+          "status": "ok",
+          "reasoning": "Apache-2.0 ohne Zusatzklauseln, aktiv gepflegt, aber sehr kleines Kernteam, offizielle Plattformen beschränkt, angekündigter Generationswechsel; .NET 9 Support endet am 10.11.2026."
+        }
+      },
+      "plan_goals": [5],
+      "depends_on": [],
+      "evidence": [
+        "https://github.com/gumyr/build123d",
+        "https://github.com/leap71/PicoGK",
+        "https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core"
+      ]
+    }
+  ]
+}

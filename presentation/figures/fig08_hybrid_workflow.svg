@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="t d" font-family="'Outfit', 'Segoe UI', Arial, sans-serif">
+<title id="t">Hybrid-Workflow aus B-rep und Voxel</title>
+<desc id="d">build123d erzeugt exakte Ausgaben (STEP, Zeichnung) und ein Mesh, PicoGK ergänzt Gitter, Kühlkanäle und variable Wandstärken für den 3D-Druck. Rückweg nur als Mesh.</desc>
+<defs>
+<marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d192f"/></marker>
+<marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#565e6d"/></marker>
+<marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fa8"/></marker>
+<marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9731a"/></marker>
+</defs>
+<rect width="1280" height="720" fill="#f2ede3"/>
+<text x="40.0" y="58.0" font-size="34" font-weight="700" fill="#0d192f" text-anchor="start" >Hybrid-Workflow: B-rep für das Bemassbare, Voxel für das Gitterartige</text>
+<rect x="40.0" y="240.0" width="300.0" height="190.0" rx="14" fill="#dbe8f6" stroke="#1f5fa8" stroke-width="3"/>
+<text x="60.0" y="282.0" font-size="26" font-weight="700" fill="#1f5fa8" text-anchor="start" >build123d (B-rep)</text>
+<text x="60.0" y="320.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Skelett + Bauteile</text>
+<text x="60.0" y="348.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >parametrisch, Gruppen,</text>
+<text x="60.0" y="376.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Constraints</text>
+<rect x="500.0" y="100.0" width="340.0" height="130.0" rx="14" fill="#ffffff" stroke="#1f5fa8" stroke-width="3"/>
+<text x="520.0" y="142.0" font-size="24" font-weight="700" fill="#1f5fa8" text-anchor="start" >Exakte Ausgabe</text>
+<text x="520.0" y="176.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >STEP, Zeichnung, Toleranzen</text>
+<text x="520.0" y="203.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >für Freigabe, CNC, Doku</text>
+<rect x="500.0" y="380.0" width="340.0" height="200.0" rx="14" fill="#fbe6d2" stroke="#d9731a" stroke-width="3"/>
+<text x="520.0" y="422.0" font-size="26" font-weight="700" fill="#d9731a" text-anchor="start" >PicoGK (Voxel)</text>
+<text x="520.0" y="460.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Gitter-Infill, Kühlkanäle,</text>
+<text x="520.0" y="488.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >variable Wandstärke,</text>
+<text x="520.0" y="516.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Glättung der Übergänge</text>
+<rect x="940.0" y="380.0" width="300.0" height="200.0" rx="14" fill="#ffffff" stroke="#d9731a" stroke-width="3"/>
+<text x="960.0" y="422.0" font-size="26" font-weight="700" fill="#d9731a" text-anchor="start" >3D-Druck</text>
+<text x="960.0" y="460.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Slices / STL</text>
+<text x="960.0" y="488.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Druckbarkeits-Check</text>
+<text x="960.0" y="516.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >aus dem Raster</text>
+<line x1="340.0" y1="300.0" x2="500.0" y2="180.0" stroke="#1f5fa8" stroke-width="4" marker-end="url(#arrB)"/>
+<text x="360.0" y="236.0" font-size="20" font-weight="700" fill="#1f5fa8" text-anchor="start" >exakt</text>
+<line x1="340.0" y1="370.0" x2="500.0" y2="450.0" stroke="#d9731a" stroke-width="4" marker-end="url(#arrO)"/>
+<text x="356.0" y="462.0" font-size="20" font-weight="700" fill="#d9731a" text-anchor="start" >Mesh (STL)</text>
+<text x="356.0" y="486.0" font-size="19" font-weight="400" fill="#d9731a" text-anchor="start" >+ Voxelgrösse wählen</text>
+<line x1="840.0" y1="480.0" x2="940.0" y2="480.0" stroke="#d9731a" stroke-width="4" marker-end="url(#arrO)"/>
+<path d="M500,545 C400,620 260,620 190,438" fill="none" stroke="#565e6d" stroke-width="3" stroke-dasharray="9,6" marker-end="url(#arrG)"/>
+<text x="320.0" y="636.0" font-size="20" font-weight="700" fill="#565e6d" text-anchor="middle" >Rückweg nur als Mesh:</text>
+<text x="320.0" y="660.0" font-size="20" font-weight="400" fill="#565e6d" text-anchor="middle" >keine bemassbaren Flächen mehr</text>
+<rect x="880.0" y="100.0" width="360.0" height="130.0" rx="14" fill="#e8e2d6" stroke="#b9b3a8" stroke-width="2"/>
+<text x="898.0" y="138.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Wahrheitsquelle bleibt</text>
+<text x="898.0" y="165.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >das Parametermodell</text>
+<text x="898.0" y="192.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >(Spec + Skript).</text>
+<text x="640.0" y="704.0" font-size="21" font-weight="700" fill="#0d192f" text-anchor="middle" >Faustregel: was bemasst, toleriert oder gezeichnet wird → B-rep.  Was Gitter, Kanal oder Feld ist → Voxel.</text>
+</svg>

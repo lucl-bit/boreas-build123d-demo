@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Boreas-Drohnenschale als Voxel-Modell (PicoGK 2.3.0, LEAP 71). Headless, ohne Viewer. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>BoreasVoxel</AssemblyName>
+    <RootNamespace>BoreasVoxel</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <ServerGarbageCollector>false</ServerGarbageCollector>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <TieredPGO>true</TieredPGO>
+    <NoWarn>$(NoWarn);CS8981;CS1591</NoWarn>
+    <!-- Ergebnisse/Artefakte nie in den Kompilierlauf ziehen -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);out/**;work/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PicoGK" Version="2.3.0" />
+  </ItemGroup>
+
+</Project>

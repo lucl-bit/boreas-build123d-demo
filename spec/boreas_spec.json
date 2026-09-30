@@ -1,0 +1,821 @@
+{
+  "meta": {
+    "units": "mm",
+    "reference": "Mohammed_0.1 Full Shell.step",
+    "version": 1,
+    "coordinate_system": "mm, Z nach oben (Nase = +Z). Ursprung auf der Rumpfachse in der Trennebene Oberteil/Unterteil (skeleton.split_z = 0).",
+    "reference_transform": {
+      "description": "Punkt im Modell-KS = Punkt in der STEP-Datei + translation. Die Nase (Shell 1) und der Einsatz (Shell 2) liegen in der Datei explodiert 90 mm zu hoch und bekommen zusätzlich extra_z.",
+      "translation": [
+        -679.7,
+        -23.15,
+        -1306.0
+      ],
+      "shells": {
+        "lower": 0,
+        "nose": 1,
+        "nose_insert": 2,
+        "upper": 3
+      },
+      "extra_z": {
+        "nose": -90.0,
+        "nose_insert": -90.0
+      }
+    },
+    "definition": "docs/geometrie_definition.md",
+    "analysis": "docs/geometrie_analyse.md",
+    "density_g_cm3": 1.24,
+    "material": "PLA (Annahme für Massen)"
+  },
+  "groups": {
+    "skeleton": {
+      "label": "Skelett (Master)",
+      "description": "Schnittstellenmasse, die mehrere Gruppen gemeinsam nutzen. Jede andere Gruppe liest nur sich selbst + dieses Skelett.",
+      "params": {
+        "arm_count": {
+          "value": 4,
+          "min": 3,
+          "max": 8,
+          "step": 1,
+          "unit": "",
+          "label": "Anzahl Arme",
+          "description": "Anzahl Ausleger/Motoren. Heckflossen, Kiele, Kerben und Kühlluft-Einlässe folgen derselben Teilung."
+        },
+        "arm_angle_offset": {
+          "value": 45.0,
+          "min": 0.0,
+          "max": 90.0,
+          "step": 0.5,
+          "unit": "°",
+          "label": "Winkel-Offset Arme",
+          "description": "Nennwinkel des ersten Arms, gemessen von +X gegen den Uhrzeigersinn."
+        },
+        "arm_splay": {
+          "value": 5.2,
+          "min": -10.0,
+          "max": 10.0,
+          "step": 0.1,
+          "unit": "°",
+          "label": "X-Spreizung",
+          "description": "Gestreckter X-Rahmen: Arm i liegt bei offset + i·360/n + (-1)^i·splay. Referenz: Motoren auf ±50.2°/±129.8° (Rechteck statt Quadrat)."
+        },
+        "motor_radius": {
+          "value": 110.6,
+          "min": 85.0,
+          "max": 150.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Motorradius",
+          "description": "Abstand Rumpfachse → Motorachse (Gondelachse)."
+        },
+        "split_z": {
+          "value": 0.0,
+          "min": -10.0,
+          "max": 10.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Trennebene Z",
+          "description": "Z-Lage der Trennebene Oberteil/Unterteil. Rohrunterkante, Gondel-Basis, Unterteil-Oberkante und alle Kiel-/Kerben-Höhen beziehen sich darauf."
+        },
+        "joint_radius": {
+          "value": 32.15,
+          "min": 27.0,
+          "max": 40.0,
+          "step": 0.05,
+          "unit": "mm",
+          "label": "Rumpfradius Trennebene",
+          "description": "Aussenradius von Oberteil-Rohr und Unterteil-Kragen in der Trennebene."
+        },
+        "nose_joint_z": {
+          "value": 114.0,
+          "min": 85.0,
+          "max": 160.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Nasen-Anschluss Z",
+          "description": "Absolute Z der Rohroberkante = Auflageebene der Nasenkappe (Modell-KS). Rohrhöhe = nose_joint_z − split_z."
+        },
+        "nose_joint_radius": {
+          "value": 32.55,
+          "min": 27.0,
+          "max": 40.0,
+          "step": 0.05,
+          "unit": "mm",
+          "label": "Nasen-Anschluss Radius",
+          "description": "Aussenradius der Rohroberkante = Basisradius der Nasenkappe."
+        },
+        "body_bottom_z": {
+          "value": -134.5,
+          "min": -180.0,
+          "max": -110.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Rumpfende Z",
+          "description": "Absolute Z der Unterkante des Unterteils (Heckebene). Unterteil-Länge = split_z − body_bottom_z. Heckflossen hängen daran."
+        }
+      }
+    },
+    "upper_body": {
+      "label": "Oberteil-Rumpf",
+      "description": "Rohr des Oberteils: fassförmige Aussenkontur, Wand, NACA-Kühlluft-Einlässe zwischen den Armen.",
+      "params": {
+        "wall": {
+          "value": 3.5,
+          "min": 1.2,
+          "max": 6.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Wandstärke",
+          "description": "Radiale (horizontale) Wandstärke des Rohrs. In der Referenz fehlt die Innenfläche; 3.5 mm = Wand des Unterteils."
+        },
+        "bulge": {
+          "value": 2.18,
+          "min": 0.0,
+          "max": 6.0,
+          "step": 0.02,
+          "unit": "mm",
+          "label": "Bauchung",
+          "description": "Maximale radiale Ausbauchung gegenüber der Geraden Rohrunterkante→Rohroberkante."
+        },
+        "bulge_pos": {
+          "value": 0.625,
+          "min": 0.3,
+          "max": 0.8,
+          "step": 0.005,
+          "unit": "",
+          "label": "Lage max. Bauchung",
+          "description": "Relative Höhe (0 = Trennebene, 1 = Rohroberkante) der maximalen Bauchung."
+        },
+        "intake_enabled": {
+          "value": 1,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "unit": "",
+          "label": "Kühlluft-Einlässe",
+          "description": "1 = NACA-Einlässe zwischen den Armen (je einer pro Arm-Zwischenraum)."
+        },
+        "intake_length": {
+          "value": 37.0,
+          "min": 15.0,
+          "max": 45.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Einlass-Länge",
+          "description": "Länge der Rampe in Z (Oberkante bis Lippe)."
+        },
+        "intake_top_offset": {
+          "value": 26.0,
+          "min": 12.0,
+          "max": 30.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Einlass-Abstand oben",
+          "description": "Abstand Rohroberkante → Rampenanfang."
+        },
+        "intake_width": {
+          "value": 16.0,
+          "min": 6.0,
+          "max": 24.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Einlass-Breite Lippe",
+          "description": "Breite an der Lippe (unten)."
+        },
+        "intake_width_top": {
+          "value": 7.0,
+          "min": 2.0,
+          "max": 16.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Einlass-Breite oben",
+          "description": "Breite am Rampenanfang (oben)."
+        },
+        "intake_depth": {
+          "value": 8.0,
+          "min": 2.0,
+          "max": 12.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Einlass-Tiefe",
+          "description": "Radiale Tiefe der Rampe an der Lippe, gemessen ab Aussenkontur. > Wand ⇒ Einlass öffnet ins Rohr."
+        }
+      }
+    },
+    "arms": {
+      "label": "Ausleger",
+      "description": "Tragende Ausleger: Steg unter dem Aero-Fin (Oberteil) und V-Kiel mit gestufter Oberseite (Unterteil).",
+      "params": {
+        "web_width": {
+          "value": 9.0,
+          "min": 4.0,
+          "max": 16.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Steg-Breite",
+          "description": "Breite des Stegs unter dem Fin (Oberteil)."
+        },
+        "web_depth": {
+          "value": 3.0,
+          "min": 0.0,
+          "max": 8.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Steg-Tiefe",
+          "description": "Wie weit der Steg unter die Trennebene reicht (0 = kein Steg)."
+        },
+        "web_start": {
+          "value": 40.7,
+          "min": 34.0,
+          "max": 60.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Steg-Beginn",
+          "description": "Radius (ab Rumpfachse), an dem der Steg beginnt (Stirnfläche = Zylinder um die Achse)."
+        },
+        "web_end_offset": {
+          "value": 12.3,
+          "min": 8.0,
+          "max": 30.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Steg-Ende vor Motor",
+          "description": "Steg endet bei motor_radius − web_end_offset (Stirnfläche = Zylinder um die Rumpfachse)."
+        },
+        "keel_top_offset": {
+          "value": 11.6,
+          "min": 8.0,
+          "max": 20.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Kiel-Oberkante",
+          "description": "Kiel-Oberseite liegt bei split_z − keel_top_offset."
+        },
+        "keel_height_root": {
+          "value": 16.36,
+          "min": 8.0,
+          "max": 25.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Kielhöhe Wurzel",
+          "description": "Höhe Kiel-Oberseite → V-Spitze beim Radius joint_radius."
+        },
+        "keel_height_tip": {
+          "value": 8.71,
+          "min": 6.0,
+          "max": 20.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Kielhöhe Spitze",
+          "description": "Höhe Kiel-Oberseite → V-Spitze beim Radius motor_radius − keel_end_radius."
+        },
+        "keel_half_angle": {
+          "value": 17.9,
+          "min": 8.0,
+          "max": 30.0,
+          "step": 0.1,
+          "unit": "°",
+          "label": "Kiel V-Halbwinkel",
+          "description": "Halber Öffnungswinkel des V-Querschnitts."
+        },
+        "keel_end_radius": {
+          "value": 16.0,
+          "min": 14.0,
+          "max": 30.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Kiel-Freigang Motor",
+          "description": "Kiel endet an einem Zylinder dieses Radius um die Motorachse (Freigang zur Gondel)."
+        },
+        "pad_start": {
+          "value": 51.5,
+          "min": 40.0,
+          "max": 70.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Auflage Beginn",
+          "description": "Radius, ab dem die erhöhte Auflage auf dem Kiel beginnt."
+        },
+        "pad_length": {
+          "value": 22.5,
+          "min": 0.0,
+          "max": 30.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Auflage Länge",
+          "description": "Radiale Länge der Auflage (0 = keine)."
+        },
+        "pad_height": {
+          "value": 2.6,
+          "min": 0.0,
+          "max": 5.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Auflage Höhe",
+          "description": "Erhöhung der Auflage über der Kiel-Oberseite."
+        },
+        "tip_drop": {
+          "value": 1.9,
+          "min": 0.0,
+          "max": 4.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Absenkung Kielende",
+          "description": "Kiel-Oberseite ab Ende der Auflage um diesen Betrag tiefer."
+        }
+      }
+    },
+    "motor_pods": {
+      "label": "Motorgondeln",
+      "description": "Rotationssymmetrische Tropfen-Gondel: Zylinder-Sockel + Potenz-Ogive (Spitze nach oben).",
+      "params": {
+        "radius": {
+          "value": 14.0,
+          "min": 8.0,
+          "max": 22.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Gondel-Radius",
+          "description": "Radius von Sockel und Ogiven-Basis."
+        },
+        "base_height": {
+          "value": 8.4,
+          "min": 2.0,
+          "max": 20.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Sockelhöhe",
+          "description": "Höhe des zylindrischen Sockels über split_z."
+        },
+        "dome_height": {
+          "value": 36.8,
+          "min": 15.0,
+          "max": 60.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Spitzenhöhe",
+          "description": "Höhe der Ogive (Sockel-Oberkante → Spitze)."
+        },
+        "tip_exponent": {
+          "value": 0.48,
+          "min": 0.3,
+          "max": 1.0,
+          "step": 0.01,
+          "unit": "",
+          "label": "Spitzen-Exponent",
+          "description": "r(ζ) = R·(1−ζ)^n. 0.5 ≈ Paraboloid (Referenz 0.48), 1 = Kegel, kleiner = stumpfer."
+        },
+        "wall": {
+          "value": 0.0,
+          "min": 0.0,
+          "max": 3.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Gondel-Wand",
+          "description": "0 = massiv (Referenz). > 0: Schale mit Öffnung unten (B-rep: offset)."
+        },
+        "cable_hole_d": {
+          "value": 0.0,
+          "min": 0.0,
+          "max": 8.0,
+          "step": 0.5,
+          "unit": "mm",
+          "label": "Kabelloch Ø",
+          "description": "0 = kein Loch. Sonst senkrechte Bohrung auf der Gondelachse durch den Sockel."
+        }
+      }
+    },
+    "lower_body": {
+      "label": "Unterteil-Rumpf",
+      "description": "Hohler Kegelrumpf, oben Kragen mit Bohrung, unten offen.",
+      "params": {
+        "collar_length": {
+          "value": 26.4,
+          "min": 10.0,
+          "max": 45.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Kragenlänge",
+          "description": "Länge des flachen Kragens unter der Trennebene (Knick zur Kegelflanke)."
+        },
+        "collar_taper": {
+          "value": 0.94,
+          "min": 0.0,
+          "max": 3.0,
+          "step": 0.01,
+          "unit": "mm",
+          "label": "Kragen-Verjüngung",
+          "description": "Radiusabnahme über den Kragen (joint_radius → joint_radius − collar_taper)."
+        },
+        "bottom_radius": {
+          "value": 15.87,
+          "min": 10.0,
+          "max": 26.0,
+          "step": 0.05,
+          "unit": "mm",
+          "label": "Endradius",
+          "description": "Aussenradius an der Unterkante (body_bottom_z)."
+        },
+        "wall": {
+          "value": 3.5,
+          "min": 1.5,
+          "max": 6.0,
+          "step": 0.05,
+          "unit": "mm",
+          "label": "Wandstärke",
+          "description": "Radiale (horizontale) Wandstärke der Kegelflanke."
+        },
+        "collar_wall": {
+          "value": 4.0,
+          "min": 2.0,
+          "max": 7.0,
+          "step": 0.05,
+          "unit": "mm",
+          "label": "Kragenwand",
+          "description": "joint_radius − Kragenbohrung (Bohrung zylindrisch)."
+        }
+      }
+    },
+    "body_fins": {
+      "label": "Aero-Fins (Rumpf → Motor)",
+      "description": "Geneigter Verkleidungs-Fin vom Rohr zur Gondel, Querschnitt NACA-Tropfen (Vorderkante oben), entlang der geneigten Vorderkante verschoben, bei split_z abgeschnitten.",
+      "params": {
+        "profile_chord": {
+          "value": 63.3,
+          "min": 30.0,
+          "max": 120.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Profilsehne",
+          "description": "Sehne c des NACA-Profils (senkrecht, ab Vorderkante nach unten; wird unten abgeschnitten)."
+        },
+        "thickness_root": {
+          "value": 10.27,
+          "min": 4.0,
+          "max": 20.0,
+          "step": 0.01,
+          "unit": "mm",
+          "label": "Dicke Wurzel",
+          "description": "Maximale Profildicke beim Radius joint_radius."
+        },
+        "thickness_tip": {
+          "value": 8.42,
+          "min": 3.0,
+          "max": 20.0,
+          "step": 0.01,
+          "unit": "mm",
+          "label": "Dicke Motor",
+          "description": "Maximale Profildicke beim Radius motor_radius."
+        },
+        "max_thickness_pos": {
+          "value": 0.3,
+          "min": 0.2,
+          "max": 0.5,
+          "step": 0.01,
+          "unit": "",
+          "label": "Lage max. Dicke",
+          "description": "x/c der maximalen Dicke (0.30 = Standard-NACA 4-stellig)."
+        },
+        "le_height_root": {
+          "value": 34.13,
+          "min": 15.0,
+          "max": 60.0,
+          "step": 0.01,
+          "unit": "mm",
+          "label": "Vorderkante Wurzel",
+          "description": "Höhe der Vorderkante über split_z beim Radius joint_radius."
+        },
+        "le_height_tip": {
+          "value": 3.36,
+          "min": 1.0,
+          "max": 8.0,
+          "step": 0.01,
+          "unit": "mm",
+          "label": "Vorderkante Motor",
+          "description": "Höhe der Vorderkante über split_z beim Radius motor_radius. Pfeilung = atan((root−tip)/(motor_radius−joint_radius)) = 21.4°."
+        },
+        "cant_angle": {
+          "value": 0.0,
+          "min": -20.0,
+          "max": 20.0,
+          "step": 0.5,
+          "unit": "°",
+          "label": "Neigung (seitlich)",
+          "description": "Drehung des Profils um die Spannweitenachse (Linie in der Trennebene). Referenz 0."
+        }
+      }
+    },
+    "tail_fins": {
+      "label": "Heckflossen",
+      "description": "Gepfeilte Heckflossen, Querschnitt NACA-Tropfen (Vorderkante oben), Spitze als Zylinderbogen, unten gerade mit Eckradius.",
+      "params": {
+        "span_radius": {
+          "value": 49.75,
+          "min": 30.0,
+          "max": 70.0,
+          "step": 0.05,
+          "unit": "mm",
+          "label": "Spannweite (Radius)",
+          "description": "Radius der Flossenspitze (Zylinder um die Rumpfachse)."
+        },
+        "tip_chord": {
+          "value": 23.9,
+          "min": 10.0,
+          "max": 40.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Sehne Spitze",
+          "description": "Höhe der Spitzenkante (Unterkante → Vorderkante) bei span_radius."
+        },
+        "sweep_angle": {
+          "value": 34.85,
+          "min": 0.0,
+          "max": 55.0,
+          "step": 0.05,
+          "unit": "°",
+          "label": "Pfeilung",
+          "description": "Winkel der Vorderkante gegen die Horizontale (steigt nach innen)."
+        },
+        "profile_chord": {
+          "value": 48.4,
+          "min": 20.0,
+          "max": 100.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Profilsehne",
+          "description": "Sehne c des NACA-Profils (ab Vorderkante nach unten)."
+        },
+        "thickness_root": {
+          "value": 3.96,
+          "min": 1.5,
+          "max": 8.0,
+          "step": 0.01,
+          "unit": "mm",
+          "label": "Dicke Wurzel",
+          "description": "Maximale Profildicke beim Radius joint_radius (Referenzstation)."
+        },
+        "thickness_tip": {
+          "value": 3.34,
+          "min": 1.0,
+          "max": 8.0,
+          "step": 0.01,
+          "unit": "mm",
+          "label": "Dicke Spitze",
+          "description": "Maximale Profildicke bei span_radius."
+        },
+        "max_thickness_pos": {
+          "value": 0.244,
+          "min": 0.15,
+          "max": 0.5,
+          "step": 0.001,
+          "unit": "",
+          "label": "Lage max. Dicke",
+          "description": "x/c der maximalen Dicke."
+        },
+        "bottom_offset": {
+          "value": 1.06,
+          "min": 0.0,
+          "max": 10.0,
+          "step": 0.01,
+          "unit": "mm",
+          "label": "Abstand Unterkante",
+          "description": "Flossen-Unterkante liegt so weit über body_bottom_z."
+        },
+        "corner_radius": {
+          "value": 3.5,
+          "min": 0.0,
+          "max": 8.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Eckradius",
+          "description": "Rundung zwischen Spitzenkante und Unterkante (Seitenansicht)."
+        }
+      }
+    },
+    "nose": {
+      "label": "Nasenkappe",
+      "description": "Hohle Potenz-Ogive mit Einsatz in der Spitze.",
+      "params": {
+        "length": {
+          "value": 92.7,
+          "min": 50.0,
+          "max": 160.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Nasenlänge",
+          "description": "Basis (nose_joint_z) → Spitze."
+        },
+        "shape_m": {
+          "value": 1.19,
+          "min": 1.0,
+          "max": 3.0,
+          "step": 0.01,
+          "unit": "",
+          "label": "Form-Exponent m",
+          "description": "r(x) = R·(1−(1−x/L)^m)^n, x ab Spitze. m=1: Potenzspitze, m=2 & n=0.5: Ellipse."
+        },
+        "shape_n": {
+          "value": 0.512,
+          "min": 0.3,
+          "max": 1.0,
+          "step": 0.002,
+          "unit": "",
+          "label": "Form-Exponent n",
+          "description": "Stumpfheit der Spitze (0.5 ≈ parabolisch, 1 = Kegel bei m=1)."
+        },
+        "wall": {
+          "value": 2.0,
+          "min": 1.0,
+          "max": 4.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Wandstärke Basis",
+          "description": "Innenkontur = gleiche Ogive mit Radius R − wall."
+        },
+        "tip_wall": {
+          "value": 6.5,
+          "min": 2.0,
+          "max": 15.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Wandstärke Spitze",
+          "description": "Innenkontur hat Länge L − tip_wall."
+        },
+        "insert_enabled": {
+          "value": 1,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "unit": "",
+          "label": "Einsatz",
+          "description": "1 = Einsatz (füllt Hohlraum der Spitze oberhalb insert_z innerhalb insert_radius)."
+        },
+        "insert_radius": {
+          "value": 18.6,
+          "min": 8.0,
+          "max": 25.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Einsatz-Radius",
+          "description": "Radius des zylindrischen Einsatz-Schafts."
+        },
+        "insert_z": {
+          "value": 36.3,
+          "min": 10.0,
+          "max": 60.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Einsatz-Unterkante",
+          "description": "Unterkante des Einsatzes über der Nasenbasis."
+        }
+      }
+    },
+    "joints": {
+      "label": "Steckverbindungen",
+      "description": "Laschen/Schlitze Nase↔Oberteil (Referenz) und Kerben/Laschen Oberteil↔Unterteil (Referenz-Kerben + ergänzte Laschen). Laschenmasse = Schlitz − Spiel (abgeleitet).",
+      "params": {
+        "clearance": {
+          "value": 0.15,
+          "min": 0.0,
+          "max": 0.6,
+          "step": 0.05,
+          "unit": "mm",
+          "label": "Passungsspiel",
+          "description": "Spiel je Seite zwischen Lasche und Schlitz/Kerbe."
+        },
+        "nose_tab_count": {
+          "value": 2,
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "unit": "",
+          "label": "Nasen-Laschen",
+          "description": "Anzahl Laschen an der Nase (gleichmässig verteilt)."
+        },
+        "nose_tab_angle": {
+          "value": -11.0,
+          "min": -90.0,
+          "max": 90.0,
+          "step": 0.5,
+          "unit": "°",
+          "label": "Winkel Nasen-Lasche",
+          "description": "Winkellage der ersten Nasen-Lasche."
+        },
+        "nose_slot_width": {
+          "value": 11.5,
+          "min": 4.0,
+          "max": 20.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Schlitzbreite Nase",
+          "description": "Breite des Schlitzes in der Rohroberkante; Laschenbreite = Schlitz − 2·Spiel."
+        },
+        "nose_slot_depth": {
+          "value": 8.1,
+          "min": 3.0,
+          "max": 15.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Schlitztiefe Nase",
+          "description": "Tiefe des Schlitzes; Laschenhöhe = Tiefe − Spiel."
+        },
+        "nose_tab_thickness": {
+          "value": 4.9,
+          "min": 2.0,
+          "max": 8.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Laschendicke Nase",
+          "description": "Radiale Dicke der Nasen-Lasche (innen ab nose_joint_radius)."
+        },
+        "rim_notch_half_angle": {
+          "value": 21.4,
+          "min": 8.0,
+          "max": 30.0,
+          "step": 0.1,
+          "unit": "°",
+          "label": "Kerbe Halbwinkel",
+          "description": "Halber Öffnungswinkel der Kerben im Unterteil-Rand (je Arm)."
+        },
+        "rim_notch_depth": {
+          "value": 15.6,
+          "min": 5.0,
+          "max": 25.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Kerbentiefe",
+          "description": "Tiefe der Kerben unter split_z."
+        },
+        "rim_notch_margin": {
+          "value": 2.05,
+          "min": 0.5,
+          "max": 6.0,
+          "step": 0.05,
+          "unit": "mm",
+          "label": "Kerbe radial",
+          "description": "Kerbe reicht bis joint_radius + margin."
+        },
+        "upper_tab_enabled": {
+          "value": 1,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "unit": "",
+          "label": "Laschen Oberteil",
+          "description": "1 = Laschen am Oberteil-Rohr, die in die Kerben greifen (Ergänzung, in der Referenz leer)."
+        },
+        "upper_tab_thickness": {
+          "value": 3.5,
+          "min": 1.5,
+          "max": 6.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Laschendicke Oberteil",
+          "description": "Radiale Dicke der Laschen (innen ab joint_radius)."
+        }
+      }
+    },
+    "details": {
+      "label": "Detail/Fertigung",
+      "description": "Nachgelagerte Detail-Features (Verrundungen, Gravur) und Fertigungs-Grenzwerte.",
+      "params": {
+        "pod_fillet": {
+          "value": 0.4,
+          "min": 0.0,
+          "max": 2.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Verrundung Gondel",
+          "description": "Radius an der Kante Sockel/Ogive der Gondel (0 = aus)."
+        },
+        "tail_root_fillet": {
+          "value": 0.0,
+          "min": 0.0,
+          "max": 2.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Verrundung Heckflossen-Wurzel",
+          "description": "Kantenverrundung Heckflosse/Rumpf (0 = aus; B-rep-Test B06)."
+        },
+        "engrave": {
+          "value": 0,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "unit": "",
+          "label": "Gravur",
+          "description": "1 = Schriftzug BOREAS 0.6 mm tief in den Unterteil-Kegel."
+        },
+        "min_wall": {
+          "value": 1.2,
+          "min": 0.4,
+          "max": 3.0,
+          "step": 0.1,
+          "unit": "mm",
+          "label": "Mindestwandstärke",
+          "description": "Grenzwert für den Druckbarkeits-Check (keine Geometrie)."
+        }
+      }
+    }
+  }
+}

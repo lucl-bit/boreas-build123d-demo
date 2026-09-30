@@ -1,0 +1,33 @@
+{
+ "description": "Referenz-STLs (Mohammed_0.1 Full Shell.step) sind bereits ins PLAN.md-Koordinatensystem transformiert: p_model = p_file + offset_to_model (nur Translation, keine Rotation). Ursprung = Rumpfachse in der Trennebene Oberteil/Unterteil, Z nach oben, mm.",
+ "offset_to_model_mm": [
+  -679.7012598886583,
+  -23.162612173854086,
+  -1302.904615896
+ ],
+ "axis_xy_in_file_mm": [
+  679.7012598886583,
+  23.162612173854086
+ ],
+ "split_z_in_file_mm": 1302.904615896,
+ "axis_fit_scatter_mm": [
+  0.1282584512660863,
+  0.12261178593572634
+ ],
+ "files": {
+  "upper.stl": "Oberteil = STEP-Shell 3",
+  "lower.stl": "Unterteil = STEP-Shell 0 (Z ca. -131.4 .. +2.6, Zapfen ragt 2.6 mm ueber die Trennebene)",
+  "nose.stl": "Nase komplett = Shell 1 (Kappe) + Shell 2 (Einsatz) zusammen",
+  "nose_cap.stl": "nur Nasenkappe = Shell 1",
+  "nose_insert.stl": "nur Einsatz = Shell 2",
+  "full.stl": "alle vier Shells (upper + lower + nose_cap + nose_insert)"
+ },
+ "note": "Die Nase liegt in der Referenz ca. 82 mm ueber dem Oberteil-Ende (Z 199 .. 300 im Modell-KS; Oberteil endet bei Z 117.1): Explosionsdarstellung, nicht Sitz-Position. Tessellierung: lin. Toleranz 0.05 mm; Netze sind keine wasserdichten Volumenkoerper (Schalen aus einzelnen Flaechen, offene Kanten) -> Volumen aus Mesh nur naeherungsweise, OCC-Kennwerte stehen in reference_meta.json.",
+ "coverage": {
+  "lower": 0.9999999391003596,
+  "nose_cap": 1.0,
+  "nose_insert": 1.0,
+  "upper": 1.0,
+  "nose": 1.0
+ }
+}

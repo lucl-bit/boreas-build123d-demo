@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="t d" font-family="'Outfit', 'Segoe UI', Arial, sans-serif">
+<title id="t">Anatomie eines B-rep-Körpers</title>
+<desc id="d">Ein Würfel als Beispiel: Körper, Flächen, Kanten, Ecken. Darunter die Flächentypen Ebene, Zylinder, Kegel und Freiform.</desc>
+<defs>
+<marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d192f"/></marker>
+<marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#565e6d"/></marker>
+<marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fa8"/></marker>
+<marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9731a"/></marker>
+</defs>
+<rect width="1280" height="720" fill="#f2ede3"/>
+<text x="40.0" y="58.0" font-size="34" font-weight="700" fill="#0d192f" text-anchor="start" >B-rep: ein Körper besteht aus Flächen, Kanten und Ecken</text>
+<rect x="40.0" y="90.0" width="290.0" height="350.0" rx="12" fill="#ffffff" stroke="#b9b3a8" stroke-width="2"/>
+<text x="185.0" y="130.0" font-size="27" font-weight="700" fill="#1f5fa8" text-anchor="middle" >1  Körper</text>
+<text x="185.0" y="158.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="middle" >(Solid)</text>
+<rect x="340.0" y="90.0" width="290.0" height="350.0" rx="12" fill="#ffffff" stroke="#b9b3a8" stroke-width="2"/>
+<text x="485.0" y="130.0" font-size="27" font-weight="700" fill="#1f5fa8" text-anchor="middle" >2  Flächen</text>
+<text x="485.0" y="158.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="middle" >(Faces)</text>
+<rect x="640.0" y="90.0" width="290.0" height="350.0" rx="12" fill="#ffffff" stroke="#b9b3a8" stroke-width="2"/>
+<text x="785.0" y="130.0" font-size="27" font-weight="700" fill="#1f5fa8" text-anchor="middle" >3  Kanten</text>
+<text x="785.0" y="158.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="middle" >(Edges)</text>
+<rect x="940.0" y="90.0" width="290.0" height="350.0" rx="12" fill="#ffffff" stroke="#b9b3a8" stroke-width="2"/>
+<text x="1085.0" y="130.0" font-size="27" font-weight="700" fill="#1f5fa8" text-anchor="middle" >4  Ecken</text>
+<text x="1085.0" y="158.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="middle" >(Vertices)</text>
+<path d="M110.0,270.0 L230.0,270.0 L230.0,390.0 L110.0,390.0 Z" fill="#8fb3dc" stroke="#1f5fa8" stroke-width="3" stroke-linejoin="round"/>
+<path d="M110.0,270.0 L160.0,220.0 L280.0,220.0 L230.0,270.0 Z" fill="#c4d8ee" stroke="#1f5fa8" stroke-width="3" stroke-linejoin="round"/>
+<path d="M230.0,270.0 L280.0,220.0 L280.0,340.0 L230.0,390.0 Z" fill="#6f9bcc" stroke="#1f5fa8" stroke-width="3" stroke-linejoin="round"/>
+<text x="185.0" y="425.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="middle" >der ganze geschlossene Körper</text>
+<path d="M392.0,295.0 L492.0,295.0 L492.0,395.0 L392.0,395.0 Z" fill="#8fb3dc" stroke="#1f5fa8" stroke-width="3" stroke-linejoin="round"/>
+<path d="M392.0,271.0 L434.0,229.0 L534.0,229.0 L492.0,271.0 Z" fill="#c4d8ee" stroke="#1f5fa8" stroke-width="3" stroke-linejoin="round"/>
+<path d="M522.0,289.0 L564.0,247.0 L564.0,347.0 L522.0,389.0 Z" fill="#6f9bcc" stroke="#1f5fa8" stroke-width="3" stroke-linejoin="round"/>
+<text x="485.0" y="425.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="middle" >jede Fläche = eine Formel</text>
+<line x1="760.0" y1="220.0" x2="760.0" y2="340.0" stroke="#1f5fa8" stroke-width="2.5" stroke-dasharray="7,5"/>
+<line x1="760.0" y1="340.0" x2="880.0" y2="340.0" stroke="#1f5fa8" stroke-width="2.5" stroke-dasharray="7,5"/>
+<line x1="710.0" y1="390.0" x2="760.0" y2="340.0" stroke="#1f5fa8" stroke-width="2.5" stroke-dasharray="7,5"/>
+<line x1="710.0" y1="270.0" x2="830.0" y2="270.0" stroke="#1f5fa8" stroke-width="5"/>
+<line x1="830.0" y1="270.0" x2="830.0" y2="390.0" stroke="#1f5fa8" stroke-width="5"/>
+<line x1="830.0" y1="390.0" x2="710.0" y2="390.0" stroke="#1f5fa8" stroke-width="5"/>
+<line x1="710.0" y1="390.0" x2="710.0" y2="270.0" stroke="#1f5fa8" stroke-width="5"/>
+<line x1="710.0" y1="270.0" x2="760.0" y2="220.0" stroke="#1f5fa8" stroke-width="5"/>
+<line x1="760.0" y1="220.0" x2="880.0" y2="220.0" stroke="#1f5fa8" stroke-width="5"/>
+<line x1="880.0" y1="220.0" x2="830.0" y2="270.0" stroke="#1f5fa8" stroke-width="5"/>
+<line x1="880.0" y1="220.0" x2="880.0" y2="340.0" stroke="#1f5fa8" stroke-width="5"/>
+<line x1="880.0" y1="340.0" x2="830.0" y2="390.0" stroke="#1f5fa8" stroke-width="5"/>
+<text x="785.0" y="425.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="middle" >Kante = Naht zweier Flächen</text>
+<path d="M1010.0,270.0 L1130.0,270.0 L1130.0,390.0 L1010.0,390.0 Z" fill="none" stroke="#b9b3a8" stroke-width="2" stroke-linejoin="round"/>
+<path d="M1010.0,270.0 L1060.0,220.0 L1180.0,220.0 L1130.0,270.0 Z" fill="none" stroke="#b9b3a8" stroke-width="2" stroke-linejoin="round"/>
+<path d="M1130.0,270.0 L1180.0,220.0 L1180.0,340.0 L1130.0,390.0 Z" fill="none" stroke="#b9b3a8" stroke-width="2" stroke-linejoin="round"/>
+<line x1="1060.0" y1="220.0" x2="1060.0" y2="340.0" stroke="#b9b3a8" stroke-width="2" stroke-dasharray="7,5"/>
+<line x1="1060.0" y1="340.0" x2="1180.0" y2="340.0" stroke="#b9b3a8" stroke-width="2" stroke-dasharray="7,5"/>
+<line x1="1010.0" y1="390.0" x2="1060.0" y2="340.0" stroke="#b9b3a8" stroke-width="2" stroke-dasharray="7,5"/>
+<circle cx="1010.0" cy="390.0" r="9" fill="#1f5fa8" stroke="#ffffff" stroke-width="2"/>
+<circle cx="1130.0" cy="270.0" r="9" fill="#1f5fa8" stroke="#ffffff" stroke-width="2"/>
+<circle cx="1010.0" cy="270.0" r="9" fill="#1f5fa8" stroke="#ffffff" stroke-width="2"/>
+<circle cx="1180.0" cy="340.0" r="9" fill="#1f5fa8" stroke="#ffffff" stroke-width="2"/>
+<circle cx="1060.0" cy="220.0" r="9" fill="#1f5fa8" stroke="#ffffff" stroke-width="2"/>
+<circle cx="1060.0" cy="340.0" r="9" fill="#1f5fa8" stroke="#ffffff" stroke-width="2"/>
+<circle cx="1130.0" cy="390.0" r="9" fill="#1f5fa8" stroke="#ffffff" stroke-width="2"/>
+<circle cx="1180.0" cy="220.0" r="9" fill="#1f5fa8" stroke="#ffffff" stroke-width="2"/>
+<text x="1085.0" y="425.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="middle" >Ecke = ein Punkt im Raum</text>
+<text x="40.0" y="484.0" font-size="24" font-weight="700" fill="#0d192f" text-anchor="start" >Eine Fläche muss nicht eben sein. Typische Flächentypen:</text>
+<rect x="40.0" y="508.0" width="285.0" height="150.0" rx="10" fill="#dbe8f6" stroke="#1f5fa8" stroke-width="2"/>
+<text x="182.0" y="542.0" font-size="23" font-weight="700" fill="#1f5fa8" text-anchor="middle" >Ebene</text>
+<path d="M60.0,628.0 L100.0,573.0 L170.0,573.0 L130.0,628.0 Z" fill="#ffffff" stroke="#1f5fa8" stroke-width="3" stroke-linejoin="round"/>
+<text x="180.0" y="598.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="start" >z. B.</text>
+<text x="180.0" y="623.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="start" >Stirnfläche</text>
+<rect x="345.0" y="508.0" width="285.0" height="150.0" rx="10" fill="#dbe8f6" stroke="#1f5fa8" stroke-width="2"/>
+<text x="487.0" y="542.0" font-size="23" font-weight="700" fill="#1f5fa8" text-anchor="middle" >Zylinder</text>
+<path d="M370,578 L370,628 A45,14 0 0 0 460,628 L460,578 A45,14 0 0 0 370,578 Z" fill="#ffffff" stroke="#1f5fa8" stroke-width="3"/>
+<ellipse cx="415" cy="578" rx="45" ry="14" fill="#8fb3dc" stroke="#1f5fa8" stroke-width="3"/>
+<text x="485.0" y="598.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="start" >z. B. Rohr,</text>
+<text x="485.0" y="623.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="start" >Bohrung</text>
+<rect x="650.0" y="508.0" width="285.0" height="150.0" rx="10" fill="#dbe8f6" stroke="#1f5fa8" stroke-width="2"/>
+<text x="792.0" y="542.0" font-size="23" font-weight="700" fill="#1f5fa8" text-anchor="middle" >Kegel</text>
+<path d="M720,566 L675,628 A45,14 0 0 0 765,628 Z" fill="#ffffff" stroke="#1f5fa8" stroke-width="3"/>
+<text x="790.0" y="598.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="start" >z. B. konischer</text>
+<text x="790.0" y="623.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="start" >Rumpf</text>
+<rect x="955.0" y="508.0" width="285.0" height="150.0" rx="10" fill="#dbe8f6" stroke="#1f5fa8" stroke-width="2"/>
+<text x="1097.0" y="542.0" font-size="23" font-weight="700" fill="#1f5fa8" text-anchor="middle" >Freiform (NURBS)</text>
+<path d="M975,603 C1000,553 1030,643 1085,578 L1085,608 C1035,658 1000,588 975,633 Z" fill="#ffffff" stroke="#1f5fa8" stroke-width="3"/>
+<text x="1095.0" y="598.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="start" >z. B.</text>
+<text x="1095.0" y="623.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="start" >Tropfenprofil</text>
+<text x="40.0" y="696.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Genauigkeit: nur durch die Zahlenrechnung begrenzt (Toleranz im Bereich 1e-7 mm), nicht durch ein Raster.</text>
+</svg>

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Boreas build123d Demo</title>
 <link rel="stylesheet" href="/gui/style.css">
+<link rel="stylesheet" href="/gui/compare.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script type="importmap">
 { "imports": {
@@ -21,10 +22,14 @@
       <button data-mode="tour" class="active">① Feature-Tour</button>
       <button data-mode="werkbank">② Werkbank</button>
       <button data-mode="pipeline">③ Pipeline</button>
+      <button data-mode="vergleich">④ Vergleich</button>
     </nav>
     <span class="spacer"></span>
     <label class="hsel">Datensatz <select id="preset"></select></label>
     <label class="hsel">Material <select id="material"></select></label>
+    <label class="hsel cmp-only">Lauf <select id="cmpRun"></select></label>
+    <label class="hsel cmp-only" title="Fehlende Ergebnisse eines Laufs durch die Mock-Daten ersetzen"><input type="checkbox" id="cmpFill" checked> Lücken mit Mock füllen</label>
+    <span class="chip warn cmp-only-chip" id="cmpMockChip" style="display:none">Mock-Daten</span>
     <span class="chip" id="chipChecks">–</span>
     <span class="chip" id="chipTime">–</span>
   </header>
@@ -84,6 +89,19 @@
       </div>
       <div class="pipe-flow" id="pipeFlow"><svg id="pipeSvg"></svg></div>
     </section>
+
+    <section class="mode-pane" data-pane="vergleich">
+      <div class="tour-head">
+        <div class="muted small">build123d (B-rep) gegen PicoGK (Voxel) – dieselben Aufgaben, nebeneinander</div>
+        <div class="progress"><i id="cmpProgress"></i></div>
+      </div>
+      <div id="cmpList"></div>
+      <div class="tour-nav">
+        <button class="btn" id="cmpPrev">← Zurück</button>
+        <button class="btn primary" id="cmpNext">Weiter →</button>
+        <div class="muted small cmp-step" id="cmpStepInfo"></div>
+      </div>
+    </section>
   </aside>
 
   <!-- ================= MITTE ================= -->
@@ -106,6 +124,28 @@
     <div class="legend" id="legend"></div>
     <div class="busy" id="busy">build123d rechnet…</div>
     <div class="stepbadge" id="stepBadge"></div>
+  </main>
+
+  <!-- ================= MITTE (Vergleich) ================= -->
+  <main class="cmpview" id="cmpMain">
+    <div class="cmp-task" id="cmpTask">
+      <div class="cmp-bar">
+        <span class="ctog on" id="cmpSync" title="Beide Kameras gemeinsam bewegen">Kamera koppeln</span>
+        <span class="ctog" id="cmpWire">Drahtgitter</span>
+        <span class="cviews"><button class="btn" data-cview="iso">Iso</button><button class="btn" data-cview="front">Vorne</button><button class="btn" data-cview="side">Seite</button><button class="btn" data-cview="top">Oben</button></span>
+        <span class="spacer"></span>
+        <span id="cmpVerdict"></span>
+      </div>
+      <div class="cmp-split">
+        <section class="cmp-pane" data-tool="brep"><div class="cmp-head"></div>
+          <div class="cmp-body"><div class="cmp-stage"><canvas></canvas><div class="cmp-loading" style="display:none"></div></div><div class="cmp-alt"></div></div>
+          <div class="cmp-foot"></div></section>
+        <section class="cmp-pane" data-tool="voxel"><div class="cmp-head"></div>
+          <div class="cmp-body"><div class="cmp-stage"><canvas></canvas><div class="cmp-loading" style="display:none"></div></div><div class="cmp-alt"></div></div>
+          <div class="cmp-foot"></div></section>
+      </div>
+    </div>
+    <div class="cmp-doc" id="cmpDoc" style="display:none"></div>
   </main>
 
   <!-- ================= RECHTS ================= -->
@@ -135,6 +175,8 @@
       </div>
     </section>
 
+    <section class="mode-pane" data-pane="vergleich"><div id="cmpPanel" class="panel"></div></section>
+
     <section class="mode-pane" data-pane="pipeline"><div id="pipePanel" class="panel">
       <h2>Wie build123d in die Simulationskette passt</h2>
       <p class="lead">build123d ist das geometrische Rückgrat: Aus Anforderungen entsteht ein exaktes BRep-Modell. Daraus werden
@@ -151,6 +193,14 @@
       <a class="btn" id="dlDrawing" download="boreas_oberteil.svg">SVG herunterladen</a>
       <button class="btn" id="closeModal">Schließen</button></div>
     <div class="body"><img id="drawingImg" alt="Technische Zeichnung"></div>
+  </div>
+</div>
+<div class="lightbox" id="cmpLightbox">
+  <div class="box">
+    <div class="head"><strong id="lbTitle"></strong><span class="spacer"></span>
+      <button class="btn" id="lbPrev">‹</button><button class="btn" id="lbNext">›</button>
+      <a class="btn" id="lbDl" download>Herunterladen</a><button class="btn" id="lbClose">Schliessen</button></div>
+    <div class="body" id="lbBody"></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>

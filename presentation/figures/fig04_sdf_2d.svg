@@ -1,0 +1,211 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="t d" font-family="'Outfit', 'Segoe UI', Arial, sans-serif">
+<title id="t">Signed Distance Field in 2D</title>
+<desc id="d">Ein Kreis als Raster; jede Zelle speichert den vorzeichenbehafteten Abstand zur Oberfläche. Booleans sind min und max.</desc>
+<defs>
+<marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d192f"/></marker>
+<marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#565e6d"/></marker>
+<marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fa8"/></marker>
+<marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9731a"/></marker>
+</defs>
+<rect width="1280" height="720" fill="#f2ede3"/>
+<text x="40.0" y="58.0" font-size="34" font-weight="700" fill="#0d192f" text-anchor="start" >Voxel und Distanzfeld: jede Zelle merkt sich den Abstand zur Oberfläche</text>
+<text x="40.0" y="96.0" font-size="22" font-weight="400" fill="#565e6d" text-anchor="start" >2D-Schnitt durch einen runden Körper; Zahlen = Abstand in Zelleneinheiten</text>
+<rect x="40.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="71.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+3.4</text>
+<rect x="102.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="133.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.6</text>
+<rect x="164.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="195.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.9</text>
+<rect x="226.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="257.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.3</text>
+<rect x="288.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="319.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.9</text>
+<rect x="350.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="381.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.8</text>
+<rect x="412.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="443.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.9</text>
+<rect x="474.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="505.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.3</text>
+<rect x="536.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="567.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.9</text>
+<rect x="598.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="629.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.6</text>
+<rect x="660.0" y="128.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="691.0" y="166.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+3.4</text>
+<rect x="40.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="71.0" y="228.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.9</text>
+<rect x="102.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="133.0" y="228.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.0</text>
+<rect x="164.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="195.0" y="228.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.2</text>
+<rect x="226.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#f4f4f4" stroke="#cccccc" stroke-width="1"/>
+<text x="257.0" y="228.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.5</text>
+<rect x="288.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="319.0" y="228.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">0.0</text>
+<rect x="350.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="381.0" y="228.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.2</text>
+<rect x="412.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="443.0" y="228.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">0.0</text>
+<rect x="474.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#f4f4f4" stroke="#cccccc" stroke-width="1"/>
+<text x="505.0" y="228.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.5</text>
+<rect x="536.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="567.0" y="228.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.2</text>
+<rect x="598.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="629.0" y="228.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.0</text>
+<rect x="660.0" y="190.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="691.0" y="228.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.9</text>
+<rect x="40.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="71.0" y="290.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.5</text>
+<rect x="102.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="133.0" y="290.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.6</text>
+<rect x="164.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="195.0" y="290.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.7</text>
+<rect x="226.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="257.0" y="290.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.2</text>
+<rect x="288.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="319.0" y="290.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.9</text>
+<rect x="350.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#eeb27d" stroke="#cccccc" stroke-width="1"/>
+<text x="381.0" y="290.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−1.2</text>
+<rect x="412.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="443.0" y="290.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.9</text>
+<rect x="474.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="505.0" y="290.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.2</text>
+<rect x="536.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="567.0" y="290.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.7</text>
+<rect x="598.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="629.0" y="290.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.6</text>
+<rect x="660.0" y="252.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="691.0" y="290.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.5</text>
+<rect x="40.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="71.0" y="352.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.3</text>
+<rect x="102.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="133.0" y="352.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.3</text>
+<rect x="164.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#f4f4f4" stroke="#cccccc" stroke-width="1"/>
+<text x="195.0" y="352.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.3</text>
+<rect x="226.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="257.0" y="352.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.6</text>
+<rect x="288.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#eeb27d" stroke="#cccccc" stroke-width="1"/>
+<text x="319.0" y="352.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−1.6</text>
+<rect x="350.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#e59a55" stroke="#cccccc" stroke-width="1"/>
+<text x="381.0" y="352.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−2.2</text>
+<rect x="412.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#eeb27d" stroke="#cccccc" stroke-width="1"/>
+<text x="443.0" y="352.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−1.6</text>
+<rect x="474.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="505.0" y="352.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.6</text>
+<rect x="536.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#f4f4f4" stroke="#cccccc" stroke-width="1"/>
+<text x="567.0" y="352.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.3</text>
+<rect x="598.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="629.0" y="352.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.3</text>
+<rect x="660.0" y="314.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="691.0" y="352.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.3</text>
+<rect x="40.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="71.0" y="414.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.3</text>
+<rect x="102.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="133.0" y="414.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.3</text>
+<rect x="164.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#f4f4f4" stroke="#cccccc" stroke-width="1"/>
+<text x="195.0" y="414.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.3</text>
+<rect x="226.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="257.0" y="414.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.6</text>
+<rect x="288.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#eeb27d" stroke="#cccccc" stroke-width="1"/>
+<text x="319.0" y="414.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−1.6</text>
+<rect x="350.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#e59a55" stroke="#cccccc" stroke-width="1"/>
+<text x="381.0" y="414.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−2.2</text>
+<rect x="412.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#eeb27d" stroke="#cccccc" stroke-width="1"/>
+<text x="443.0" y="414.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−1.6</text>
+<rect x="474.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="505.0" y="414.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.6</text>
+<rect x="536.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#f4f4f4" stroke="#cccccc" stroke-width="1"/>
+<text x="567.0" y="414.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.3</text>
+<rect x="598.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="629.0" y="414.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.3</text>
+<rect x="660.0" y="376.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="691.0" y="414.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.3</text>
+<rect x="40.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="71.0" y="476.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.5</text>
+<rect x="102.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="133.0" y="476.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.6</text>
+<rect x="164.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="195.0" y="476.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.7</text>
+<rect x="226.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="257.0" y="476.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.2</text>
+<rect x="288.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="319.0" y="476.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.9</text>
+<rect x="350.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#eeb27d" stroke="#cccccc" stroke-width="1"/>
+<text x="381.0" y="476.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−1.2</text>
+<rect x="412.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="443.0" y="476.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.9</text>
+<rect x="474.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="505.0" y="476.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.2</text>
+<rect x="536.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="567.0" y="476.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.7</text>
+<rect x="598.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="629.0" y="476.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.6</text>
+<rect x="660.0" y="438.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="691.0" y="476.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.5</text>
+<rect x="40.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="71.0" y="538.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.9</text>
+<rect x="102.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="133.0" y="538.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.0</text>
+<rect x="164.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="195.0" y="538.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.2</text>
+<rect x="226.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#f4f4f4" stroke="#cccccc" stroke-width="1"/>
+<text x="257.0" y="538.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.5</text>
+<rect x="288.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="319.0" y="538.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">0.0</text>
+<rect x="350.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="381.0" y="538.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">−0.2</text>
+<rect x="412.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#fbe6d2" stroke="#cccccc" stroke-width="1"/>
+<text x="443.0" y="538.0" font-size="19" font-weight="700" fill="#000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">0.0</text>
+<rect x="474.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#f4f4f4" stroke="#cccccc" stroke-width="1"/>
+<text x="505.0" y="538.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.5</text>
+<rect x="536.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="567.0" y="538.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.2</text>
+<rect x="598.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="629.0" y="538.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.0</text>
+<rect x="660.0" y="500.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="691.0" y="538.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.9</text>
+<rect x="40.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="71.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+3.4</text>
+<rect x="102.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="133.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.6</text>
+<rect x="164.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="195.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.9</text>
+<rect x="226.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="257.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.3</text>
+<rect x="288.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="319.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.9</text>
+<rect x="350.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="381.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.8</text>
+<rect x="412.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="443.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+0.9</text>
+<rect x="474.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="505.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.3</text>
+<rect x="536.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="567.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+1.9</text>
+<rect x="598.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="629.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+2.6</text>
+<rect x="660.0" y="562.0" width="62.0" height="62.0" rx="0" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="691.0" y="600.0" font-size="19" font-weight="400" fill="#0d192f" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+3.4</text>
+<circle cx="381.0" cy="376.0" r="167.4" fill="none" stroke="#0d192f" stroke-width="3" stroke-dasharray="10,6"/>
+<text x="40.0" y="658.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >gestrichelt = Oberfläche (Abstand 0)</text>
+<rect x="770.0" y="128.0" width="470.0" height="130.0" rx="12" fill="#fbe6d2" stroke="#d9731a" stroke-width="3"/>
+<text x="790.0" y="165.0" font-size="23" font-weight="700" fill="#0d192f" text-anchor="start" >Negativ = innen  (orange)</text>
+<text x="790.0" y="197.0" font-size="23" font-weight="700" fill="#0d192f" text-anchor="start" >Null = Oberfläche</text>
+<text x="790.0" y="229.0" font-size="23" font-weight="700" fill="#0d192f" text-anchor="start" >Positiv = aussen  (weiss)</text>
+<text x="770.0" y="300.0" font-size="25" font-weight="700" fill="#d9731a" text-anchor="start" >Formen kombinieren = rechnen</text>
+<text x="770.0" y="335.0" font-size="23" font-weight="400" fill="#0d192f" text-anchor="start" >Vereinigen</text>
+<text x="1230.0" y="335.0" font-size="23" font-weight="700" fill="#d9731a" text-anchor="end" font-family="Consolas, monospace">min(a, b)</text>
+<line x1="770.0" y1="347.0" x2="1230.0" y2="347.0" stroke="#b9b3a8" stroke-width="1"/>
+<text x="770.0" y="381.0" font-size="23" font-weight="400" fill="#0d192f" text-anchor="start" >Schneiden</text>
+<text x="1230.0" y="381.0" font-size="23" font-weight="700" fill="#d9731a" text-anchor="end" font-family="Consolas, monospace">max(a, b)</text>
+<line x1="770.0" y1="393.0" x2="1230.0" y2="393.0" stroke="#b9b3a8" stroke-width="1"/>
+<text x="770.0" y="427.0" font-size="23" font-weight="400" fill="#0d192f" text-anchor="start" >Abziehen</text>
+<text x="1230.0" y="427.0" font-size="23" font-weight="700" fill="#d9731a" text-anchor="end" font-family="Consolas, monospace">max(a, −b)</text>
+<line x1="770.0" y1="439.0" x2="1230.0" y2="439.0" stroke="#b9b3a8" stroke-width="1"/>
+<text x="770.0" y="473.0" font-size="23" font-weight="400" fill="#0d192f" text-anchor="start" >Wand der Dicke w</text>
+<text x="1230.0" y="473.0" font-size="23" font-weight="700" fill="#d9731a" text-anchor="end" font-family="Consolas, monospace">|d| ≤ w/2</text>
+<line x1="770.0" y1="485.0" x2="1230.0" y2="485.0" stroke="#b9b3a8" stroke-width="1"/>
+<text x="770.0" y="560.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Keine Flächen, keine Topologie:</text>
+<text x="770.0" y="589.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Booleans gelingen fast immer.</text>
+<text x="770.0" y="618.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Der Preis: nur so genau wie das Raster.</text>
+</svg>

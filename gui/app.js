@@ -1,5 +1,6 @@
 import { Viewer } from "/gui/viewer.js";
 import { $, $$, api, css, esc, fmt, highlight, kvHtml, renderResult, tableHtml, toast } from "/gui/ui.js";
+import { enterCompare, leaveCompare } from "/gui/compare.js";
 
 const S = {
   cfg: null, mode: "tour", preset: null, material: "PETG", req: null, params: null,
@@ -19,6 +20,7 @@ function loadPreset(name) {
 }
 
 function setMode(mode) {
+  if (S.mode === "vergleich" && mode !== "vergleich") leaveCompare();
   S.mode = mode;
   document.body.className = "mode-" + mode;
   $$(".modes button").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
@@ -29,6 +31,8 @@ function setMode(mode) {
     if (!S.werk.last) runBuild(); else renderLegend([["Rumpf", [.30, .72, .42]], ["Gondeln", [.2, .55, .85]], ["Nasenkappe", [.95, .52, .18]]]);
   } else if (mode === "tour") {
     viewer.show(["scene"]); runTour(true);
+  } else if (mode === "vergleich") {
+    enterCompare();
   } else {
     viewer.show(["scene"]); renderPipeFlow();
     if (S.pipe.result) selectStage(S.pipe.sel || "cad"); else { viewer.setItems([]); renderLegend([]); }
@@ -310,7 +314,7 @@ function renderPipeFlow() {
 
 function drawLoopArrow() {
   const flow = $("#pipeFlow"), svg = $("#pipeSvg");
-  if (!flow || !svg) return;
+  if (!flow || !svg || !S.cfg) return;
   const [from, to] = S.cfg.loop;
   const a = $(`.pnode[data-id="${from}"]`, flow), b = $(`.pnode[data-id="${to}"]`, flow);
   if (!a || !b) return;
@@ -426,5 +430,5 @@ window.addEventListener("resize", () => requestAnimationFrame(drawLoopArrow));
   loadPreset(Object.keys(S.cfg.presets)[0]);
   buildParamFields(); syncParamFields(); renderTourList();
   $("#chipChecks").textContent = "Mock-Daten";
-  setMode("tour");
+  setMode(location.hash.startsWith("#vergleich") ? "vergleich" : "tour");
 })();

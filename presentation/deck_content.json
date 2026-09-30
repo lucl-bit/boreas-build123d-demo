@@ -1,0 +1,1258 @@
+{
+ "slides": [
+  {
+   "layout": "Boreas Titel",
+   "title": "B-rep oder Voxel?",
+   "subtitle": "build123d und PicoGK im Vergleich am Boreas-Rumpf · 30. September 2026"
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Agenda",
+   "bodysize": 16,
+   "body": [
+    "Warum wir Geometrie per Code brauchen, und was B-rep und Voxel sind",
+    "Testobjekt und Methode: ein Modell, zwei Werkzeuge, gleiche Aufgaben",
+    "Ergebnisse: Funktionen, Grenzen, Aerodynamik und Kühlung, API und KI",
+    "Empfehlung und nächste Schritte"
+   ],
+   "notes": "Kurz den Ablauf nennen. Neben den Folien läuft die Demo (Modus ④ Vergleich)."
+  },
+  {
+   "layout": "Boreas Kapitel",
+   "title": "01  Warum und Grundlagen"
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Die Pipeline braucht Geometrie, die sich per Code ändern lässt",
+   "images": [
+    {
+     "path": "figures/fig06_pipeline_einordnung.svg",
+     "x": 43,
+     "y": 92,
+     "w": 634,
+     "h": 262,
+     "center": true
+    }
+   ],
+   "notes": "Anforderungen → Geometrie → Simulation → Optimierung → Fertigung, ohne Mausklicks, damit viele Varianten und KI-Agents möglich werden. Unsere Referenz aus Shapr3D ist freihand gezeichnet – jede Änderung ist Handarbeit. Und unsere Teile werden aerodynamisch und thermisch anspruchsvoller.",
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Ein CAD-Kern speichert Form – als exaktes Rezept oder als Raster",
+   "images": [
+    {
+     "path": "figures/fig01_vektor_vs_pixel.svg",
+     "x": 43,
+     "y": 92,
+     "w": 634,
+     "h": 262,
+     "center": true
+    }
+   ],
+   "notes": "Vektorgrafik vs. Pixelbild: Das Rezept bleibt beim Zoomen glatt, das Raster zeigt Treppen. In 3D heisst das Rezept B-rep, das Raster Voxel. Alles Weitere folgt aus diesem Unterschied.",
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "B-rep: ein Körper ist eine Haut aus exakten Flächen",
+   "images": [
+    {
+     "path": "figures/fig02_brep_anatomie.svg",
+     "x": 43,
+     "y": 96,
+     "w": 400,
+     "h": 250
+    }
+   ],
+   "boxes": [
+    {
+     "x": 465,
+     "y": 110,
+     "w": 212,
+     "h": 230,
+     "size": 13,
+     "gap": 8,
+     "lines": [
+      {
+       "t": "Masse sind exakt",
+       "b": true
+      },
+      "Ein Radius 5 mm ist ein echter Kreisbogen",
+      {
+       "t": "Elemente ansprechbar",
+       "b": true
+      },
+      "„Alle Kanten am oberen Ring verrunden“",
+      {
+       "t": "CAD-Standard",
+       "b": true
+      },
+      "STEP, Zeichnung, Toleranzen",
+      {
+       "t": "Schwäche",
+       "b": true,
+       "c": "A33A3A"
+      },
+      "Tausende feine Details, Offsets auf Freiform"
+     ]
+    }
+   ],
+   "notes": "Boundary Representation: Körper → Flächen → Kanten → Ecken. Jede Fläche ist eine Formel.",
+   "titlesize": 24
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Voxel: jede Zelle kennt ihren Abstand zur Oberfläche",
+   "images": [
+    {
+     "path": "figures/fig04_sdf_2d.svg",
+     "x": 43,
+     "y": 96,
+     "w": 400,
+     "h": 250
+    }
+   ],
+   "boxes": [
+    {
+     "x": 465,
+     "y": 110,
+     "w": 212,
+     "h": 230,
+     "size": 13,
+     "gap": 8,
+     "lines": [
+      {
+       "t": "„Minecraft, nur sehr fein“",
+       "b": true
+      },
+      "Würfel von z. B. 0.5 mm, mit Abstandswert",
+      {
+       "t": "Formen verknüpfen = rechnen",
+       "b": true
+      },
+      "Vereinigen = Minimum, Abziehen = Maximum",
+      {
+       "t": "Gitter und Kanäle als Formel",
+       "b": true
+      },
+      "scheitert praktisch nie",
+      {
+       "t": "Schwäche",
+       "b": true,
+       "c": "A33A3A"
+      },
+      "Genauigkeit = Raster; feiner kostet Speicher"
+     ]
+    }
+   ],
+   "notes": "Negativ innen, positiv aussen, null auf der Oberfläche (Distanzfeld). Keine Flächen, die sich schneiden müssen – deshalb gelingen Booleans praktisch immer.",
+   "titlesize": 24
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Die Kandidaten",
+   "tables": [
+    {
+     "x": 43,
+     "y": 100,
+     "w": 634,
+     "h": 240,
+     "size": 12,
+     "colw": [
+      150,
+      242,
+      242
+     ],
+     "rows": [
+      [
+       "",
+       {
+        "t": "build123d",
+        "c": "F2EDE3"
+       },
+       {
+        "t": "PicoGK",
+        "c": "F2EDE3"
+       }
+      ],
+      [
+       {
+        "t": "Technik",
+        "b": true
+       },
+       "B-rep (exakte Flächen)",
+       "Voxel / Distanzfeld"
+      ],
+      [
+       {
+        "t": "Sprache",
+        "b": true
+       },
+       "Python",
+       "C# (.NET 9)"
+      ],
+      [
+       {
+        "t": "Kern",
+        "b": true
+       },
+       "OpenCASCADE (OCCT 8)",
+       "OpenVDB-basiert, LEAP 71"
+      ],
+      [
+       {
+        "t": "Lizenz",
+        "b": true
+       },
+       "Apache 2.0",
+       "Apache 2.0"
+      ],
+      [
+       {
+        "t": "Plattformen",
+        "b": true
+       },
+       "Windows, Linux, macOS",
+       "Windows, macOS (kein Linux offiziell)"
+      ],
+      [
+       {
+        "t": "Community",
+        "b": true
+       },
+       "3'236 Sterne, 87 Beitragende",
+       "1'121 Sterne, 4 Beitragende"
+      ],
+      [
+       {
+        "t": "Doku für KI",
+        "b": true
+       },
+       "offizielles llms.txt",
+       "XML-Kommentare, Beispiele veraltet"
+      ],
+      [
+       {
+        "t": "Ausgabe",
+        "b": true
+       },
+       "STEP, STL, 3MF, SVG/DXF-Zeichnung",
+       "STL, VDB, CLI-Schichten"
+      ]
+     ]
+    }
+   ],
+   "notes": "Stand 30.09.2026 (docs/research_*.md). Beide Open Source, gleicher Zweck: Geometrie aus Programmcode."
+  },
+  {
+   "layout": "Boreas Kapitel",
+   "title": "02  Testobjekt und Methode"
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Der Boreas-Rumpf, neu aufgebaut: 81 Parameter in 10 Gruppen",
+   "images": [
+    {
+     "path": "figures/fig05_parametergruppen_skelett.svg",
+     "x": 43,
+     "y": 96,
+     "w": 400,
+     "h": 250
+    }
+   ],
+   "boxes": [
+    {
+     "x": 465,
+     "y": 104,
+     "w": 212,
+     "h": 240,
+     "size": 12.5,
+     "gap": 7,
+     "lines": [
+      {
+       "t": "Skelett-Methode",
+       "b": true
+      },
+      "Das Skelett hält nur gemeinsame Masse: Armzahl, Motorlage, Trennebene",
+      "Jede Gruppe liest nur sich selbst + Skelett",
+      {
+       "t": "Geprüft",
+       "b": true
+      },
+      "10/10 Gruppen unabhängig (build123d), 10/10 (PicoGK)",
+      {
+       "t": "Treue zum Original",
+       "b": true
+      },
+      "Ø Abweichung Unterteil 0.6 mm, Oberteil 1.5 mm; Tropfenprofile übernommen"
+     ]
+    }
+   ],
+   "notes": "Die Shapr3D-Datei ist nicht constrained. Neu: Skelett + 9 Gruppen (Oberteil, Arme, Gondeln, Unterteil, Aero-Fins, Heckflossen, Nase, Steckverbindungen, Details). Pipeline ändert eine Gruppe pro Durchlauf, der Rest bleibt stabil. Demo: Modus ④, Aufgabe B03, „Neu rechnen“ mit body_fins.profile_chord=60 – nur das Oberteil ändert sich.",
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Dasselbe Modell in beiden Werkzeugen – aus einer Spezifikation",
+   "images": [
+    {
+     "path": "shots/b02_side_by_side.png",
+     "x": 43,
+     "y": 92,
+     "w": 380,
+     "h": 262
+    }
+   ],
+   "tables": [
+    {
+     "x": 440,
+     "y": 100,
+     "w": 237,
+     "h": 150,
+     "size": 10.5,
+     "colw": [
+      70,
+      58,
+      58,
+      51
+     ],
+     "rows": [
+      [
+       "Teil",
+       "build123d (exakt)",
+       "PicoGK (0.5 mm)",
+       "Differenz"
+      ],
+      [
+       "Oberteil",
+       "195.8 cm³",
+       "195.3 cm³",
+       "-0.2 %"
+      ],
+      [
+       "Unterteil",
+       "89.2 cm³",
+       "91.2 cm³",
+       "+2.2 %"
+      ],
+      [
+       "Nasenkappe",
+       "30.9 cm³",
+       "30.8 cm³",
+       "-0.3 %"
+      ],
+      [
+       "Einsatz",
+       "38.8 cm³",
+       "38.7 cm³",
+       "-0.2 %"
+      ]
+     ]
+    }
+   ],
+   "boxes": [
+    {
+     "x": 440,
+     "y": 262,
+     "w": 237,
+     "h": 85,
+     "size": 11,
+     "color": "565E6D",
+     "lines": [
+      "Gleiche Spec, gleiche Formeln (docs/geometrie_definition.md), gleicher Aufruf.",
+      "Codeaufwand für das Modell: 782 Zeilen Python gegen 781 Zeilen C#."
+     ]
+    }
+   ],
+   "notes": "Links build123d, rechts PicoGK in der Demo (Modus ④). Auf Bildschirmgrösse gleich, innen verschieden.",
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Methode: gleiche Aufgaben, gleicher Aufruf, neutrale Messung",
+   "bodysize": 12.5,
+   "notes": "Es geht um die Werkzeuge, nicht um Auslegungswerte. Ergebnisse im Repo: bench/results/latest.",
+   "boxes": [
+    {
+     "x": 43,
+     "y": 108,
+     "w": 300,
+     "h": 240,
+     "size": 12.5,
+     "gap": 5,
+     "lines": [
+      {
+       "t": "18 Aufgaben",
+       "b": true,
+       "s": 13.5
+      },
+      {
+       "t": "10 gemeinsame (B01–B10): Import, Modell, Varianten, Tropfenprofil, Schale, Verrundung, Masse, Druck, Aero, Leistung",
+       "bullet": true
+      },
+      {
+       "t": "4 B-rep-typische (R01–R04), 4 Voxel-typische (V01–V04)",
+       "bullet": true
+      },
+      {
+       "t": "„nicht möglich“ ist ein Ergebnis, kein Fehler",
+       "bullet": true
+      }
+     ]
+    },
+    {
+     "x": 377,
+     "y": 108,
+     "w": 300,
+     "h": 240,
+     "size": 12.5,
+     "gap": 5,
+     "lines": [
+      {
+       "t": "Messung",
+       "b": true,
+       "s": 13.5
+      },
+      {
+       "t": "Beide Werkzeuge per Kommandozeile, JSON rein und raus",
+       "bullet": true
+      },
+      {
+       "t": "Runner misst Laufzeit und RAM von aussen und rechnet Kennwerte selbst aus den STL-Netzen",
+       "bullet": true
+      },
+      {
+       "t": "Voxel standardmässig 0.5 mm, B07 zusätzlich 2 / 1 / 0.25 mm",
+       "bullet": true
+      },
+      {
+       "t": "Material-, Motor-, Aerowerte sind Mock-Daten",
+       "bullet": true
+      }
+     ]
+    }
+   ],
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Kapitel",
+   "title": "03  Ergebnisse"
+  },
+  {
+   "layout": "Boreas Drei Kacheln",
+   "title": "Drei Zahlen vorweg",
+   "tiles": [
+    {
+     "v": "17 | 11",
+     "l": "Sekunden Neuaufbau nach Gruppenänderung (B-rep | Voxel)"
+    },
+    {
+     "v": "0.6 | 2.6",
+     "l": "GB RAM, Median (B-rep | Voxel 0.5 mm)"
+    },
+    {
+     "v": "1/6",
+     "l": "B-rep-Verrundungen an Freiformkanten erfolgreich (Voxel: alle)"
+    }
+   ],
+   "footnote": "Laufzeit inkl. Prozessstart und Export. Voxel-RAM wächst mit feinerem Raster stark (Folie Genauigkeit).",
+   "notes": "Beide Werkzeuge bauen das Modell in Sekunden. Voxel braucht ein Vielfaches an Speicher. B-rep scheitert an Freiform-Operationen, die im Voxel trivial sind."
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Gemeinsame Aufgaben: beide lösen fast alles – auf verschiedene Art",
+   "tables": [
+    {
+     "x": 43,
+     "y": 90,
+     "w": 634,
+     "h": 262,
+     "size": 10,
+     "rowh": 22,
+     "colw": [
+      200,
+      100,
+      100,
+      234
+     ],
+     "rows": [
+      [
+       "Gemeinsame Aufgabe",
+       "build123d",
+       "PicoGK",
+       "Beobachtung"
+      ],
+      [
+       {
+        "t": "B01  Referenz-STEP einlesen und abgleichen"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "B-rep liest STEP nativ; Voxel nur über STL/Rasterung",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "B02  Gesamtmodell aus der Spec"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "B03  Gruppen-Variation"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "B04  Tropfenprofil (Fins, Gondeln)"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "beide treffen das Profil; Voxel rundet Hinterkante",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "B05  Wandstärke / Schale"
+       },
+       {
+        "t": "◐ teilweise",
+        "c": "B7791F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "B-rep-Offset auf fertigen Teilen scheitert; Voxel immer",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "B06  Verrundungen"
+       },
+       {
+        "t": "◐ teilweise",
+        "c": "B7791F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "B-rep: 1/6 Fillets ok; Voxel: alle",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "B07  Masse und Genauigkeit"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "B08  Druck-Export und -Check"
+       },
+       {
+        "t": "◐ teilweise",
+        "c": "B7791F",
+        "b": true
+       },
+       {
+        "t": "◐ teilweise",
+        "c": "B7791F",
+        "b": true
+       },
+       {
+        "t": "Voxel: kein 3MF, nur STL",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "B09  Aero-Vorbereitung (CFD)"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "B10  Leistung und Skalierung"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "",
+        "c": "565E6D"
+       }
+      ]
+     ]
+    }
+   ],
+   "notes": "Ziel 1 und 2. Vollständige Matrix mit 51 Funktionen in spec/feature_matrix.json und im Demo-Modus ④.",
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Spezialaufgaben: jede Technik hat ihr eigenes Revier",
+   "tables": [
+    {
+     "x": 43,
+     "y": 90,
+     "w": 634,
+     "h": 230,
+     "size": 10,
+     "rowh": 24,
+     "colw": [
+      200,
+      100,
+      100,
+      234
+     ],
+     "rows": [
+      [
+       "Spezialaufgabe",
+       "build123d",
+       "PicoGK",
+       "Beobachtung"
+      ],
+      [
+       {
+        "t": "R01  Bemasste Zeichnung"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "✕ nicht möglich",
+        "c": "A33A3A",
+        "b": true
+       },
+       {
+        "t": "Voxel hat keine Kanten zum Bemassen",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "R02  STEP-Export, Selektoren"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "✕ nicht möglich",
+        "c": "A33A3A",
+        "b": true
+       },
+       {
+        "t": "Voxel: kein STEP, keine Selektoren",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "R03  Baugruppe, Joints"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "◐ teilweise",
+        "c": "B7791F",
+        "b": true
+       },
+       {
+        "t": "Voxel: keine Joints, nur Kollisionsprüfung",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "R04  Toleranzen, Passungen"
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "◐ teilweise",
+        "c": "B7791F",
+        "b": true
+       },
+       {
+        "t": "Spalt < 1 Voxel im selben Teil wächst zu",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "V01  Gitter-Infill (Lattice)"
+       },
+       {
+        "t": "◐ teilweise",
+        "c": "B7791F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "B-rep: 423 Stäbe 40 s → leer; Voxel: Gyroid 0.8 s",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "V02  Kühlluftkanäle im Rumpf"
+       },
+       {
+        "t": "◐ teilweise",
+        "c": "B7791F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "B-rep: 1 Kanal per Sweep; Voxel: 4 verzweigt",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "V03  Feld-Wandstärke, Bool auf Netz"
+       },
+       {
+        "t": "✕ nicht möglich",
+        "c": "A33A3A",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "Feldgesteuerte Wand und Bool auf Netz nur Voxel",
+        "c": "565E6D"
+       }
+      ],
+      [
+       {
+        "t": "V04  Schichten für den Druck"
+       },
+       {
+        "t": "◐ teilweise",
+        "c": "B7791F",
+        "b": true
+       },
+       {
+        "t": "✓ ok",
+        "c": "2E7D4F",
+        "b": true
+       },
+       {
+        "t": "B-rep: exakte Schnitte; Voxel: CLI-Schichtdatei",
+        "c": "565E6D"
+       }
+      ]
+     ]
+    }
+   ],
+   "notes": "„Nicht möglich“ heisst nicht schlecht: Ein gedrucktes Gitterteil braucht keine Zeichnung. Aber tragende, gefräste oder zugekaufte Teile brauchen Masse und STEP.",
+   "titlesize": 24
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Genauigkeit kostet beim Voxel Speicher und Rechenzeit",
+   "images": [
+    {
+     "path": "charts/voxel_sweep.png",
+     "x": 43,
+     "y": 92,
+     "w": 634,
+     "h": 205
+    }
+   ],
+   "boxes": [
+    {
+     "x": 43,
+     "y": 305,
+     "w": 634,
+     "h": 45,
+     "size": 12,
+     "lines": [
+      "Mittlere Abweichung zur exakten Form: 0.10 mm bei 2 mm Voxel, 0.02 mm bei 0.5 mm – danach kaum Gewinn, aber RAM 2.6 → 9.3 GB. Dünne Details (Fin-Hinterkante) bestimmen die Voxelgrösse: Faustregel ≤ ⅓ des dünnsten Details."
+     ]
+    }
+   ],
+   "notes": "B07: gleiche Geometrie, Voxelgrösse 2 → 0.25 mm. B-rep ist exakt (gestrichelte Linie).",
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Leistung: ähnlich schnell, Voxel braucht 4–5× mehr RAM",
+   "images": [
+    {
+     "path": "charts/runtime_ram.png",
+     "x": 43,
+     "y": 92,
+     "w": 634,
+     "h": 215
+    }
+   ],
+   "boxes": [
+    {
+     "x": 43,
+     "y": 312,
+     "w": 634,
+     "h": 40,
+     "size": 12,
+     "lines": [
+      "B09 Strömungsgebiet: B-rep 11 s / 0.7 GB, Voxel 16 s / 2.7 GB – das Raster füllt das ganze Gebiet."
+     ]
+    }
+   ],
+   "notes": "Wandzeit je Prozess inkl. Start und Export, gemessen vom Runner.",
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Was nur B-rep kann: bemassen, tolerieren, exakt übergeben",
+   "images": [
+    {
+     "path": "shots/r01_drawing.svg",
+     "x": 43,
+     "y": 92,
+     "w": 390,
+     "h": 262
+    }
+   ],
+   "boxes": [
+    {
+     "x": 450,
+     "y": 100,
+     "w": 227,
+     "h": 250,
+     "size": 12.5,
+     "gap": 7,
+     "lines": [
+      {
+       "t": "R01",
+       "b": true,
+       "c": "1F5FA8"
+      },
+      "Bemasste A3-Zeichnung direkt aus dem Modell",
+      {
+       "t": "R02",
+       "b": true,
+       "c": "1F5FA8"
+      },
+      "STEP-Rundreise ohne Verlust, Kanten-Selektoren",
+      {
+       "t": "R03",
+       "b": true,
+       "c": "1F5FA8"
+      },
+      "Baugruppe mit Joints, exakte Kollision",
+      {
+       "t": "R04",
+       "b": true,
+       "c": "1F5FA8"
+      },
+      "Passungsspiel 0.15 mm exakt nachmessbar"
+     ]
+    }
+   ],
+   "notes": "Ein Voxelmodell hat keine Kanten, an denen man ein Mass anbringen könnte. Demo: Werkbank, Zeichnung.",
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Was nur Voxel kann: Gitter, Kühlkanäle, Felder",
+   "images": [
+    {
+     "path": "shots/v01_gyroid.png",
+     "x": 43,
+     "y": 92,
+     "w": 300,
+     "h": 200
+    },
+    {
+     "path": "shots/v02_channels.png",
+     "x": 352,
+     "y": 92,
+     "w": 300,
+     "h": 200
+    }
+   ],
+   "boxes": [
+    {
+     "x": 43,
+     "y": 300,
+     "w": 634,
+     "h": 55,
+     "size": 12,
+     "lines": [
+      "Gyroid-Infill 0.8 s, 3456-Stab-Gitter 0.11 s, 4 verzweigte Kühlkanäle in Sekundenbruchteilen – B-rep: 423 Stäbe 40 s und leeres Ergebnis.",
+      "Dazu: Wandstärke als Feld (1.2 → 3.5 mm), Booleans direkt auf Scan-/STL-Netzen, CLI-Schichten für den Druck."
+     ]
+    }
+   ],
+   "notes": "Links Gyroid-Infill im Unterteil (V01), rechts gewendelte Kühlluftkanäle mit Abzweig in die Heckflossen (V02).",
+   "titlesize": 24
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Aerodynamik und Kühlung: exakte Hülle vs. fertiges Rechengitter",
+   "bodysize": 12.5,
+   "notes": "Ziel 3. Für Aero-Aussenflächen zählt Exaktheit und Glätte, für innere Luftführung die Freiheit der Form.",
+   "boxes": [
+    {
+     "x": 43,
+     "y": 108,
+     "w": 300,
+     "h": 240,
+     "size": 12.5,
+     "gap": 5,
+     "lines": [
+      {
+       "t": "Aussenströmung",
+       "b": true,
+       "s": 13.5
+      },
+      {
+       "t": "Stirnfläche beide ≈ 86 cm²",
+       "bullet": true
+      },
+      {
+       "t": "B-rep: exakte Hülle als STEP/STL → klassische CFD (OpenFOAM, Gmsh)",
+       "bullet": true
+      },
+      {
+       "t": "Voxel: Strömungsgebiet direkt als kartesisches Gitter → Lattice-Boltzmann",
+       "bullet": true
+      },
+      {
+       "t": "Achtung: FluidX3D verbietet kommerzielle/militärische Nutzung",
+       "bullet": true
+      }
+     ]
+    },
+    {
+     "x": 377,
+     "y": 108,
+     "w": 300,
+     "h": 240,
+     "size": 12.5,
+     "gap": 5,
+     "lines": [
+      {
+       "t": "Kühlluft im Rumpf",
+       "b": true,
+       "s": 13.5
+      },
+      {
+       "t": "Einlässe, Rampen, Wände: in beiden parametrisch",
+       "bullet": true
+      },
+      {
+       "t": "Kanalnetze, die der Wand folgen, sich verzweigen: Voxel",
+       "bullet": true
+      },
+      {
+       "t": "Tropfenprofile: B-rep exakt; Voxel rundet Hinterkanten unter ~1 Voxel",
+       "bullet": true
+      },
+      {
+       "t": "Genauigkeit am Fin entscheidet über die Voxelgrösse",
+       "bullet": true
+      }
+     ]
+    }
+   ],
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "API, KI-Agents, Pipeline: beide steuerbar, B-rep reifer",
+   "tables": [
+    {
+     "x": 43,
+     "y": 90,
+     "w": 634,
+     "h": 250,
+     "size": 11,
+     "colw": [
+      110,
+      262,
+      262
+     ],
+     "rows": [
+      [
+       "Kriterium",
+       {
+        "t": "build123d",
+        "c": "F2EDE3"
+       },
+       {
+        "t": "PicoGK",
+        "c": "F2EDE3"
+       }
+      ],
+      [
+       {
+        "t": "A01 API",
+        "b": true
+       },
+       "Python, zwei Stile (Builder/Algebra), Typ-Hinweise",
+       "C#, kleine klare API, Compiler fängt Fehler"
+      ],
+      [
+       {
+        "t": "A02 Headless",
+        "b": true
+       },
+       "✓ reines Python-Modul",
+       "✓ new Library(voxel) – kein Fenster"
+      ],
+      [
+       {
+        "t": "A03 KI-Agents",
+        "b": true
+       },
+       "llms.txt, viel Beispielcode; aber stille Fehler (falscher Fuse, Netzlöcher)",
+       "Booleans scheitern nie; aber Beispiele veraltet, Bibliothek liefert falsche Volumen"
+      ],
+      [
+       {
+        "t": "A04 Pipeline",
+        "b": true
+       },
+       "Python-Ökosystem (numpy, scipy, CFD, Optimierer) direkt",
+       "Prozessgrenze .NET; Python nur über inoffizielle Bindings"
+      ],
+      [
+       {
+        "t": "A05 Reife",
+        "b": true
+       },
+       "87 Beitragende, alle Plattformen, 0.x-Version",
+       "4 Beitragende, kein Linux, .NET 9 bis Nov. 2026"
+      ]
+     ]
+    }
+   ],
+   "notes": "Ziele 4 und 5. Beide Modelle in diesem Projekt wurden mit KI-Agents gebaut – gleicher Codeumfang. Die gefährlichsten Fehler sind die stillen (B-rep) und die falschen Kennwerte der Bibliothek (Voxel).",
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Kapitel",
+   "title": "04  Empfehlung"
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Empfehlung: B-rep als Master, Voxel als Spezialwerkzeug",
+   "images": [
+    {
+     "path": "figures/fig08_hybrid_workflow.svg",
+     "x": 43,
+     "y": 92,
+     "w": 390,
+     "h": 262
+    }
+   ],
+   "boxes": [
+    {
+     "x": 450,
+     "y": 100,
+     "w": 227,
+     "h": 250,
+     "size": 12.5,
+     "gap": 7,
+     "lines": [
+      {
+       "t": "Bemassen, tolerieren, STEP?",
+       "b": true
+      },
+      "→ build123d (Rumpf, Arme, Gondeln, Flossen)",
+      {
+       "t": "Gitter, Kanäle, Felder?",
+       "b": true
+      },
+      "→ PicoGK als Nachbearbeitung für den Druck",
+      {
+       "t": "Beides?",
+       "b": true
+      },
+      "→ Hybrid: B-rep-Modell ist die Wahrheit, Übergabe als Netz",
+      {
+       "t": "Rückweg",
+       "b": true,
+       "c": "A33A3A"
+      },
+      "Voxel → STEP gibt es nicht"
+     ]
+    }
+   ],
+   "notes": "Die Pipeline-Parameter (Skelett + Gruppen) bleiben in einer Spec, beide Werkzeuge lesen sie.",
+   "titlesize": 21
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Nächste Schritte",
+   "bodysize": 15,
+   "body": [
+    "Pipeline-Kern festlegen: build123d + Spec mit Gruppen (Entscheid im Team)",
+    "Pilot: Unterteil mit Kühlluftkanälen – B-rep-Hülle, Voxel-Kanäle, gedruckt",
+    "Agent-Test: KI-Agent löst dieselbe Änderung in beiden Werkzeugen, Fehlerquote messen",
+    "Checks gegen stille Fehler: Volumen, Dichtheit, Gültigkeit nach jedem Schritt",
+    "CFD-Anbindung klären: OpenFOAM mit STL aus B-rep (Lizenz geprüft)"
+   ],
+   "notes": "Ein Pilotbauteil durch die ganze Kette statt weiterer Vergleiche."
+  },
+  {
+   "layout": "Boreas Abschluss",
+   "title": "Danke · Fragen"
+  },
+  {
+   "layout": "Boreas Inhalt",
+   "title": "Backup: Grenzen dieser Untersuchung",
+   "boxes": [
+    {
+     "x": 43,
+     "y": 100,
+     "w": 634,
+     "h": 240,
+     "size": 13,
+     "gap": 8,
+     "lines": [
+      {
+       "t": "Mock-Daten für Material, Motoren und Aero – es werden Werkzeuge verglichen, keine Auslegung",
+       "bullet": true
+      },
+      {
+       "t": "Ein Bauteil, ein Rechner (i7-13700HX, 32 GB, Windows 11), je Aufgabe 1–2 Läufe",
+       "bullet": true
+      },
+      {
+       "t": "Beide Modelle mit KI-Agents gebaut; Laufzeiten des eigenen Codes (z. B. Netzprüfung) fliessen ein",
+       "bullet": true
+      },
+      {
+       "t": "Referenz-STEP ist teils fehlerhaft (Schalen statt Körper) – Abweichung über Oberflächen gemessen",
+       "bullet": true
+      },
+      {
+       "t": "Voxel-Ergebnisse gelten für 0.5 mm; feinere Raster sind genauer, aber teurer (B07)",
+       "bullet": true
+      },
+      {
+       "t": "Keine echte CFD-/FEM-Rechnung, nur deren Vorbereitung",
+       "bullet": true
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

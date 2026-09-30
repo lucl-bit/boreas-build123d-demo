@@ -1,0 +1,11 @@
+{
+  "meta": {"units": "mm", "reference": "FAKE-Spec nur fuer Pipeline-Tests (bench/_fake_tool.py)", "version": 0},
+  "groups": {
+    "skeleton": {"label": "Skelett (FAKE)", "params": {"arm_count": {"value": 4, "min": 3, "max": 8, "step": 1}}},
+    "upper_body": {"label": "Oberteil-Rumpf (FAKE)", "params": {"body_height": {"value": 117, "min": 60, "max": 220, "step": 1}}},
+    "arms": {"label": "Ausleger (FAKE)", "params": {"arm_width": {"value": 13, "min": 6, "max": 30, "step": 0.5}}},
+    "motor_pods": {"label": "Gondeln (FAKE)", "params": {"pod_radius": {"value": 12, "min": 6, "max": 30, "step": 0.5}}},
+    "nose": {"label": "Nase (FAKE)", "params": {"nose_length": {"value": 93, "min": 30, "max": 200, "step": 1}}},
+    "details": {"label": "Details (FAKE)", "params": {"edge_fillet": {"value": 1.0, "min": 0, "max": 3, "step": 0.1}}}
+  }
+}

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="t d" font-family="'Outfit', 'Segoe UI', Arial, sans-serif">
+<title id="t">Genauigkeit gegen Voxelgrösse und Speicher</title>
+<desc id="d">Links: Fehler wächst mit der Zellgrösse; B-rep bleibt bei nahezu null. Rechts: Speicher wächst bei feinerem Raster um Faktor 8 (dicht) oder 4 (dünnbesetzt) je Halbierung. Qualitatives Schema.</desc>
+<defs>
+<marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d192f"/></marker>
+<marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#565e6d"/></marker>
+<marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fa8"/></marker>
+<marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9731a"/></marker>
+</defs>
+<rect width="1280" height="720" fill="#f2ede3"/>
+<text x="40.0" y="58.0" font-size="34" font-weight="700" fill="#0d192f" text-anchor="start" >Genauigkeit gegen Rechenaufwand: die Voxelgrösse ist der Regler</text>
+<text x="40.0" y="96.0" font-size="22" font-weight="400" fill="#565e6d" text-anchor="start" >Qualitatives Schema, keine Messwerte</text>
+<text x="100.0" y="150.0" font-size="25" font-weight="700" fill="#0d192f" text-anchor="start" >Abweichung von der exakten Form</text>
+<line x1="100.0" y1="180.0" x2="100.0" y2="555.0" stroke="#0d192f" stroke-width="2.5"/>
+<line x1="100.0" y1="555.0" x2="590.0" y2="555.0" stroke="#0d192f" stroke-width="2.5"/>
+<text x="86.0" y="186.0" font-size="18" font-weight="400" fill="#565e6d" text-anchor="end" >gross</text>
+<text x="86.0" y="555.0" font-size="18" font-weight="400" fill="#565e6d" text-anchor="end" >klein</text>
+<line x1="130.0" y1="555.0" x2="130.0" y2="563.0" stroke="#0d192f" stroke-width="2"/>
+<text x="130.0" y="589.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="middle" >4</text>
+<line x1="237.5" y1="555.0" x2="237.5" y2="563.0" stroke="#0d192f" stroke-width="2"/>
+<text x="237.5" y="589.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="middle" >2</text>
+<line x1="345.0" y1="555.0" x2="345.0" y2="563.0" stroke="#0d192f" stroke-width="2"/>
+<text x="345.0" y="589.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="middle" >1</text>
+<line x1="452.5" y1="555.0" x2="452.5" y2="563.0" stroke="#0d192f" stroke-width="2"/>
+<text x="452.5" y="589.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="middle" >0.5</text>
+<line x1="560.0" y1="555.0" x2="560.0" y2="563.0" stroke="#0d192f" stroke-width="2"/>
+<text x="560.0" y="589.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="middle" >0.25</text>
+<text x="345.0" y="621.0" font-size="21" font-weight="700" fill="#0d192f" text-anchor="middle" >Voxelgrösse in mm  (grob → fein)</text>
+<path d="M130.0,198.0 L237.5,370.5 L345.0,456.8 L452.5,499.9 L560.0,521.4" fill="none" stroke="#d9731a" stroke-width="5" stroke-linejoin="round"/>
+<circle cx="130.0" cy="198.0" r="7" fill="#d9731a" stroke="none" stroke-width="0"/>
+<circle cx="237.5" cy="370.5" r="7" fill="#d9731a" stroke="none" stroke-width="0"/>
+<circle cx="345.0" cy="456.8" r="7" fill="#d9731a" stroke="none" stroke-width="0"/>
+<circle cx="452.5" cy="499.9" r="7" fill="#d9731a" stroke="none" stroke-width="0"/>
+<circle cx="560.0" cy="521.4" r="7" fill="#d9731a" stroke="none" stroke-width="0"/>
+<line x1="100.0" y1="545.0" x2="590.0" y2="545.0" stroke="#1f5fa8" stroke-width="5"/>
+<text x="120.0" y="529.0" font-size="21" font-weight="700" fill="#1f5fa8" text-anchor="start" >B-rep: nur Zahlengenauigkeit</text>
+<text x="200.0" y="210.0" font-size="21" font-weight="700" fill="#d9731a" text-anchor="start" >Voxel: Fehler ~ Zellgrösse</text>
+<line x1="100.0" y1="474.0" x2="590.0" y2="474.0" stroke="#565e6d" stroke-width="2.5" stroke-dasharray="8,5"/>
+<text x="120.0" y="464.0" font-size="21" font-weight="400" fill="#565e6d" text-anchor="start" >geforderte Toleranz</text>
+<line x1="388.0" y1="474.0" x2="388.0" y2="555.0" stroke="#0d192f" stroke-width="2" stroke-dasharray="4,4"/>
+<text x="700.0" y="150.0" font-size="25" font-weight="700" fill="#0d192f" text-anchor="start" >Speicher und Rechenzeit (relativ, log. Skala)</text>
+<line x1="700.0" y1="180.0" x2="700.0" y2="555.0" stroke="#0d192f" stroke-width="2.5"/>
+<line x1="700.0" y1="555.0" x2="1200.0" y2="555.0" stroke="#0d192f" stroke-width="2.5"/>
+<line x1="730.0" y1="555.0" x2="730.0" y2="563.0" stroke="#0d192f" stroke-width="2"/>
+<text x="730.0" y="589.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="middle" >4</text>
+<line x1="840.0" y1="555.0" x2="840.0" y2="563.0" stroke="#0d192f" stroke-width="2"/>
+<text x="840.0" y="589.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="middle" >2</text>
+<line x1="950.0" y1="555.0" x2="950.0" y2="563.0" stroke="#0d192f" stroke-width="2"/>
+<text x="950.0" y="589.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="middle" >1</text>
+<line x1="1060.0" y1="555.0" x2="1060.0" y2="563.0" stroke="#0d192f" stroke-width="2"/>
+<text x="1060.0" y="589.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="middle" >0.5</text>
+<line x1="1170.0" y1="555.0" x2="1170.0" y2="563.0" stroke="#0d192f" stroke-width="2"/>
+<text x="1170.0" y="589.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="middle" >0.25</text>
+<text x="950.0" y="621.0" font-size="21" font-weight="700" fill="#0d192f" text-anchor="middle" >Voxelgrösse in mm  (grob → fein)</text>
+<path d="M730.0,543.0 L840.0,458.8 L950.0,374.6 L1060.0,290.4 L1170.0,206.2" fill="none" stroke="#d9731a" stroke-width="5" stroke-linejoin="round"/>
+<path d="M730.0,543.0 L840.0,486.9 L950.0,430.7 L1060.0,374.6 L1170.0,318.4" fill="none" stroke="#eeb27d" stroke-width="5" stroke-linejoin="round" stroke-dasharray="10,6"/>
+<circle cx="730.0" cy="543.0" r="7" fill="#d9731a" stroke="none" stroke-width="0"/>
+<circle cx="840.0" cy="458.8" r="7" fill="#d9731a" stroke="none" stroke-width="0"/>
+<circle cx="950.0" cy="374.6" r="7" fill="#d9731a" stroke="none" stroke-width="0"/>
+<circle cx="1060.0" cy="290.4" r="7" fill="#d9731a" stroke="none" stroke-width="0"/>
+<circle cx="1170.0" cy="206.2" r="7" fill="#d9731a" stroke="none" stroke-width="0"/>
+<circle cx="730.0" cy="543.0" r="6" fill="#eeb27d" stroke="#d9731a" stroke-width="1.5"/>
+<circle cx="840.0" cy="486.9" r="6" fill="#eeb27d" stroke="#d9731a" stroke-width="1.5"/>
+<circle cx="950.0" cy="430.7" r="6" fill="#eeb27d" stroke="#d9731a" stroke-width="1.5"/>
+<circle cx="1060.0" cy="374.6" r="6" fill="#eeb27d" stroke="#d9731a" stroke-width="1.5"/>
+<circle cx="1170.0" cy="318.4" r="6" fill="#eeb27d" stroke="#d9731a" stroke-width="1.5"/>
+<line x1="700.0" y1="524.0" x2="1200.0" y2="524.0" stroke="#1f5fa8" stroke-width="5"/>
+<text x="1200.0" y="510.0" font-size="21" font-weight="700" fill="#1f5fa8" text-anchor="end" paint-order="stroke" stroke="#f2ede3" stroke-width="6" stroke-linejoin="round">B-rep: hängt an Feature-Zahl, nicht an Auflösung</text>
+<text x="720.0" y="216.0" font-size="21" font-weight="700" fill="#d9731a" text-anchor="start" paint-order="stroke" stroke="#f2ede3" stroke-width="6" stroke-linejoin="round">dichtes Raster: ×8 je Halbierung</text>
+<text x="1200.0" y="362.4" font-size="21" font-weight="700" fill="#d9731a" text-anchor="end" paint-order="stroke" stroke="#f2ede3" stroke-width="6" stroke-linejoin="round">dünnbesetzt (nur Oberflächennähe): ×4</text>
+<line x1="994.0" y1="240.0" x2="994.0" y2="555.0" stroke="#0d192f" stroke-width="2" stroke-dasharray="4,4"/>
+<text x="1004.0" y="475.0" font-size="21" font-weight="700" fill="#0d192f" text-anchor="start" paint-order="stroke" stroke="#f2ede3" stroke-width="6" stroke-linejoin="round">Arbeitspunkt</text>
+<text x="640.0" y="704.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="middle" font-style="italic" >Erwartung. Messwerte folgen aus  [[ERGEBNIS: B07 Genauigkeit vs. Voxelgrösse]]  und  [[ERGEBNIS: B10 Laufzeit/RAM]].</text>
+</svg>

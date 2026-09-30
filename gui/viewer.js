@@ -26,15 +26,25 @@ export class Viewer {
     this.spinners = []; this.spin = true; this.explode = 40; this.showEdges = true;
     this.lineMats = new Set();
     this.clock = new THREE.Clock();
+    this.demand = false;      // true: nur bei Kamerabewegung / requestRender() zeichnen (Vergleichsmodus, spart GPU)
+    this.dirty = true;
     new ResizeObserver(() => this.resize()).observe(canvas.parentElement);
     this.resize();
     const loop = () => {
       const dt = this.clock.getDelta();
-      if (this.spin) for (const s of this.spinners) s.pivot.rotateOnAxis(s.axis, s.dir * dt * 14);
-      this.controls.update(); this.renderer.render(this.scene, this.camera); requestAnimationFrame(loop);
+      if (this.canvas.offsetParent !== null) {          // ausgeblendete Canvas (anderer Modus) nicht zeichnen
+        if (this.spin) for (const s of this.spinners) s.pivot.rotateOnAxis(s.axis, s.dir * dt * 14);
+        const moved = this.controls.update();
+        if (!this.demand || moved || this.dirty || (this.spin && this.spinners.length)) {
+          this.renderer.render(this.scene, this.camera); this.dirty = false;
+        }
+      }
+      requestAnimationFrame(loop);
     };
     loop();
   }
+
+  requestRender() { this.dirty = true; }
 
   resize() {
     const r = this.canvas.parentElement.getBoundingClientRect();
@@ -42,6 +52,7 @@ export class Viewer {
     this.renderer.setSize(r.width, r.height, false);
     this.camera.aspect = r.width / r.height; this.camera.updateProjectionMatrix();
     for (const m of this.lineMats) m.resolution.set(r.width, r.height);
+    this.dirty = true;
   }
 
   static geom(m) {

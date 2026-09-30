@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="t d" font-family="'Outfit', 'Segoe UI', Arial, sans-serif">
+<title id="t">Design-Automation-Pipeline mit Einordnung beider Werkzeuge</title>
+<desc id="d">Fünf Stufen von Anforderungen bis Fertigung. Pro Stufe eine typische Stärke von B-rep und Voxel. Rückkopplungsschleife von Optimierung zu CAD.</desc>
+<defs>
+<marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d192f"/></marker>
+<marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#565e6d"/></marker>
+<marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fa8"/></marker>
+<marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9731a"/></marker>
+</defs>
+<rect width="1280" height="720" fill="#f2ede3"/>
+<text x="40.0" y="58.0" font-size="34" font-weight="700" fill="#0d192f" text-anchor="start" >Design-Automation-Pipeline: wo welches Werkzeug seine Stärke hat</text>
+<text x="40.0" y="96.0" font-size="22" font-weight="400" fill="#565e6d" text-anchor="start" >Einordnung nach Erwartung; der Benchmark bestätigt oder widerlegt sie</text>
+<path d="M26.0,190.0 L240.0,190.0 L262.0,225.0 L240.0,260.0 L26.0,260.0 Z" fill="#e8e2d6" stroke="#0d192f" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="144.0" y="234.0" font-size="22" font-weight="700" fill="#0d192f" text-anchor="middle" >Anforderungen</text>
+<rect x="26.0" y="280.0" width="236.0" height="274.0" rx="10" fill="#ffffff" stroke="#565e6d" stroke-width="2.5"/>
+<text x="42.0" y="318.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Eingaben:</text>
+<text x="42.0" y="346.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" ></text>
+<text x="42.0" y="374.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Nutzlast</text>
+<text x="42.0" y="402.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Zielgeschwindigkeit</text>
+<text x="42.0" y="430.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Bauraum, Material</text>
+<text x="42.0" y="458.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" ></text>
+<text x="42.0" y="486.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >als Parameterdatei</text>
+<text x="42.0" y="514.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >(JSON)</text>
+<path d="M274.0,190.0 L488.0,190.0 L510.0,225.0 L488.0,260.0 L274.0,260.0 L296.0,225.0 Z" fill="#e8e2d6" stroke="#0d192f" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="400.0" y="234.0" font-size="22" font-weight="700" fill="#0d192f" text-anchor="middle" >CAD-Geometrie</text>
+<rect x="274.0" y="280.0" width="236.0" height="130.0" rx="10" fill="#dbe8f6" stroke="#1f5fa8" stroke-width="3"/>
+<text x="288.0" y="306.0" font-size="19" font-weight="700" fill="#1f5fa8" text-anchor="start" >B-rep</text>
+<text x="288.0" y="336.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Parametrik, Skelett,</text>
+<text x="288.0" y="362.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Baugruppen-Joints,</text>
+<text x="288.0" y="388.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Constraints</text>
+<rect x="274.0" y="424.0" width="236.0" height="130.0" rx="10" fill="#fbe6d2" stroke="#d9731a" stroke-width="3"/>
+<text x="288.0" y="450.0" font-size="19" font-weight="700" fill="#d9731a" text-anchor="start" >Voxel</text>
+<text x="288.0" y="480.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Freiformen, Gitter,</text>
+<text x="288.0" y="506.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Kühlkanäle,</text>
+<text x="288.0" y="532.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Feldsteuerung</text>
+<path d="M522.0,190.0 L736.0,190.0 L758.0,225.0 L736.0,260.0 L522.0,260.0 L544.0,225.0 Z" fill="#e8e2d6" stroke="#0d192f" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="648.0" y="234.0" font-size="22" font-weight="700" fill="#0d192f" text-anchor="middle" >Simulation</text>
+<rect x="522.0" y="280.0" width="236.0" height="130.0" rx="10" fill="#dbe8f6" stroke="#1f5fa8" stroke-width="3"/>
+<text x="536.0" y="306.0" font-size="19" font-weight="700" fill="#1f5fa8" text-anchor="start" >B-rep</text>
+<text x="536.0" y="336.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Masse, Trägheit exakt,</text>
+<text x="536.0" y="362.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Balken-FEM,</text>
+<text x="536.0" y="388.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Projektionsflächen</text>
+<rect x="522.0" y="424.0" width="236.0" height="130.0" rx="10" fill="#fbe6d2" stroke="#d9731a" stroke-width="3"/>
+<text x="536.0" y="450.0" font-size="19" font-weight="700" fill="#d9731a" text-anchor="start" >Voxel</text>
+<text x="536.0" y="480.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Raster = Gitter für</text>
+<text x="536.0" y="506.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Strömung (LBM)</text>
+<text x="536.0" y="532.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >und Wärme</text>
+<path d="M770.0,190.0 L984.0,190.0 L1006.0,225.0 L984.0,260.0 L770.0,260.0 L792.0,225.0 Z" fill="#e8e2d6" stroke="#0d192f" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="896.0" y="234.0" font-size="22" font-weight="700" fill="#0d192f" text-anchor="middle" >Optimierung</text>
+<rect x="770.0" y="280.0" width="236.0" height="130.0" rx="10" fill="#dbe8f6" stroke="#1f5fa8" stroke-width="3"/>
+<text x="784.0" y="306.0" font-size="19" font-weight="700" fill="#1f5fa8" text-anchor="start" >B-rep</text>
+<text x="784.0" y="336.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Parameter-Sweep:</text>
+<text x="784.0" y="362.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >je Variante neu</text>
+<text x="784.0" y="388.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >bauen</text>
+<rect x="770.0" y="424.0" width="236.0" height="130.0" rx="10" fill="#fbe6d2" stroke="#d9731a" stroke-width="3"/>
+<text x="784.0" y="450.0" font-size="19" font-weight="700" fill="#d9731a" text-anchor="start" >Voxel</text>
+<text x="784.0" y="480.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Feldbasiert:</text>
+<text x="784.0" y="506.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Wandstärke und</text>
+<text x="784.0" y="532.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Gitter variabel</text>
+<path d="M1018.0,190.0 L1232.0,190.0 L1254.0,225.0 L1232.0,260.0 L1018.0,260.0 L1040.0,225.0 Z" fill="#e8e2d6" stroke="#0d192f" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="1144.0" y="234.0" font-size="22" font-weight="700" fill="#0d192f" text-anchor="middle" >Fertigung</text>
+<rect x="1018.0" y="280.0" width="236.0" height="130.0" rx="10" fill="#dbe8f6" stroke="#1f5fa8" stroke-width="3"/>
+<text x="1032.0" y="306.0" font-size="19" font-weight="700" fill="#1f5fa8" text-anchor="start" >B-rep</text>
+<text x="1032.0" y="336.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >STEP, bemasste</text>
+<text x="1032.0" y="362.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Zeichnung,</text>
+<text x="1032.0" y="388.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Toleranzen</text>
+<rect x="1018.0" y="424.0" width="236.0" height="130.0" rx="10" fill="#fbe6d2" stroke="#d9731a" stroke-width="3"/>
+<text x="1032.0" y="450.0" font-size="19" font-weight="700" fill="#d9731a" text-anchor="start" >Voxel</text>
+<text x="1032.0" y="480.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Slices, STL,</text>
+<text x="1032.0" y="506.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >Gitter-Infill</text>
+<text x="1032.0" y="532.0" font-size="20" font-weight="400" fill="#0d192f" text-anchor="start" >für 3D-Druck</text>
+<path d="M896.0,186 C896.0,128 400.0,128 400.0,184" fill="none" stroke="#0d192f" stroke-width="3" marker-end="url(#arrK)"/>
+<text x="648.0" y="134.0" font-size="20" font-weight="700" fill="#0d192f" text-anchor="middle" >Schleife: Agent ändert eine Gruppe, Pipeline läuft neu</text>
+<rect x="26.0" y="578.0" width="1228.0" height="120.0" rx="10" fill="#ffffff" stroke="#0d192f" stroke-width="2.5"/>
+<text x="46.0" y="614.0" font-size="23" font-weight="700" fill="#0d192f" text-anchor="start" >Schnittstelle zum KI-Agenten in allen Stufen:</text>
+<text x="46.0" y="648.0" font-size="21" font-weight="400" fill="#0d192f" text-anchor="start" >Code statt Klicks  ·  Parameter als JSON  ·  Aufruf ohne Oberfläche (headless)  ·  Ergebnis als Datei plus Kennzahlen</text>
+<text x="46.0" y="680.0" font-size="19" font-weight="400" fill="#565e6d" text-anchor="start" >Das Raster (Voxel) ist ein Vorteil, wenn die Simulation selbst ein Raster braucht; B-rep, wenn Masse und Zeichnung zählen.</text>
+</svg>
